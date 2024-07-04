@@ -128,44 +128,92 @@ ax4_.pie(dd41,autopct='%1.2f%%')
 for i in dd41.index:
     different_month.append(i)
 
-dd11.name = 'July'
-df_top10_month=dd11.to_frame()
-dd21.name = 'August'
-df_top10_month=df_top10_month.join(dd21, how='outer')
-dd31.name = 'September'
-df_top10_month=df_top10_month.join(dd31, how='outer')
-dd41.name = 'October'
-df_top10_month=df_top10_month.join(dd41, how='outer')
-df_top10_month= df_top10_month.astype(np.float32)
+# dd11.name = 'July'
+# df_top10_month=dd11.to_frame()
+# dd21.name = 'August'
+# df_top10_month=df_top10_month.join(dd21, how='outer')
+# dd31.name = 'September'
+# df_top10_month=df_top10_month.join(dd31, how='outer')
+# dd41.name = 'October'
+# df_top10_month=df_top10_month.join(dd41, how='outer')
+# df_top10_month= df_top10_month.astype(np.float32)
 
-#Figure 4
+# #Figure 4
 
-fig, ax = plt.subplots(figsize=(12, 10))  # Adjusted figure size to give more space
+# fig, ax = plt.subplots(figsize=(12, 10))  # Adjusted figure size to give more space
 
-# Assuming df_top10_month is defined somewhere in your code, process it:
-df_top10_month_binary = df_top10_month.fillna(0)
-df_binary = df_top10_month_binary.where(df_top10_month_binary == 0, other=1)
-df_binary = df_binary.loc[df_binary.sum(axis=1).sort_values(ascending=False).index]
-df_binary = df_binary.T
+# df_top10_month_binary = df_top10_month.fillna(0)
+# df_binary = df_top10_month_binary.where(df_top10_month_binary == 0, other=1)
+# df_binary = df_binary.loc[df_binary.sum(axis=1).sort_values(ascending=False).index]
+# df_binary = df_binary.T
 
-# Create a heatmap with binary values
-sns.heatmap(df_binary, annot=True, cmap='coolwarm', vmin=0, vmax=1,
-            cbar=False, square=True, linewidths=0.5, linecolor='gray')
+# # Create a heatmap with binary values
+# sns.heatmap(df_binary, annot=True, cmap='coolwarm', vmin=0, vmax=1,
+#             cbar=False, square=True, linewidths=0.5, linecolor='gray')
 
-# Custom legend
-legend_handles = [Patch(facecolor='blue', label='0: does not exist in top10'),
-                  Patch(facecolor='red', label='1: exists in top10')]
-ax.legend(handles=legend_handles, title='Legend', loc='upper left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
+# # Custom legend
+# legend_handles = [Patch(facecolor='blue', label='0: does not exist in top10'),
+#                   Patch(facecolor='red', label='1: exists in top10')]
+# ax.legend(handles=legend_handles, title='Legend', loc='upper left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
 
-plt.subplots_adjust(right=0.8)  # Adjust subplot parameters to give more space on the right for the legend
-plt.tight_layout()  # Optional: can use plt.tight_layout() to adjust layouts automatically
+# plt.subplots_adjust(right=0.8)  # Adjust subplot parameters to give more space on the right for the legend
+# plt.tight_layout()  # Optional: can use plt.tight_layout() to adjust layouts automatically
 
-# Remove the x-axis title and adjust labels
-ax.set_xlabel('')
-ax.set_ylabel('Months')
+# # Remove the x-axis title and adjust labels
+# ax.set_xlabel('')
+# ax.set_ylabel('Months')
 
-# Save and show the plot
-plt.savefig(output_folder / 'Binary Map of genome vs. months.png', dpi=300, bbox_inches='tight')
+# # Save and show the plot
+# plt.savefig(output_folder / 'Binary Map of genome vs. months.png', dpi=300, bbox_inches='tight')
+
+# Load the phylum data
+phylum_data = pd.read_csv('MAG_taxonomy.tsv', sep='\t')[['Genome', 'Phylum']]
+
+# Assume 'july', 'aug', 'sep', 'october' are Series objects with genomes as indices and values are some form of abundance
+# Replace these with your actual Series data
+sorted_ser7 = july.sort_values(ascending=False).head(10)
+sorted_ser8 = aug.sort_values(ascending=False).head(10)
+sorted_ser9 = sep.sort_values(ascending=False).head(10)
+sorted_ser10 = october.sort_values(ascending=False).head(10)
+
+# Combine data into one DataFrame
+df = pd.concat([sorted_ser7, sorted_ser8, sorted_ser9, sorted_ser10], axis=1)
+df.columns = ['July', 'August', 'September', 'October']
+df = df.join(phylum_data.set_index('Genome'), how='left')
+
+# Fill NaN with 0 for binary heatmap
+df_binary = df[['July', 'August', 'September', 'October']].notnull().astype(int)
+
+# Sort the dataframe by Phylum
+df['Phylum'] = df.index.map(phylum_data.set_index('Genome')['Phylum'])
+df_sorted = df.sort_values(by=['Phylum', 'July', 'August', 'September', 'October'], ascending=[True, False, False, False, False])
+df_binary_sorted = df_binary.loc[df_sorted.index]
+
+# Create the heatmap with annotations
+fig, ax = plt.subplots(figsize=(15, 12))
+sns.heatmap(df_binary_sorted, cmap='coolwarm', cbar=False, linewidths=0.5, linecolor='gray', annot=True, ax=ax)
+
+# Move the x-axis (months) to the top
+ax.xaxis.set_ticks_position('top')
+ax.xaxis.set_label_position('top')
+
+# Add horizontal lines to group the taxonomic groups
+unique_phyla = df_sorted['Phylum'].unique()
+previous_phylum = None
+for idx, genome in enumerate(df_sorted.index):
+    current_phylum = df_sorted.loc[genome, 'Phylum']
+    if previous_phylum and previous_phylum != current_phylum:
+        ax.axhline(y=idx, color='black', linestyle='--')
+    previous_phylum = current_phylum
+
+# Custom legend with descriptive labels
+legend_handles = [Patch(facecolor='blue', label='Not in Top 10'),
+                  Patch(facecolor='red', label='In Top 10')]
+ax.legend(handles=legend_handles, title='Presence in Top 10', loc='upper left', bbox_to_anchor=(1.05, 1))
+
+plt.tight_layout()
+plt.savefig(output_folder / 'Binary Map of genome vs. months.svg', format='svg', dpi=300, bbox_inches='tight')
+## change in Inkscape
 
 
 
@@ -235,31 +283,72 @@ df_top10= df_top10.astype(np.float32)
 
 #Figure 6
 
-fig, ax = plt.subplots(figsize=(12, 10))  # Adjusted figure size for better layout
+# fig, ax = plt.subplots(figsize=(12, 10))  # Adjusted figure size for better layout
 
-# Assuming df_top10 is defined somewhere in your code, process it:
-df_top10_depth_binary = df_top10.fillna(0)
-df_depth_binary = df_top10_depth_binary.where(df_top10_depth_binary == 0, other=1)
-df_depth_binary = df_depth_binary.T  # Transpose the DataFrame
+# # Assuming df_top10 is defined somewhere in your code, process it:
+# df_top10_depth_binary = df_top10.fillna(0)
+# df_depth_binary = df_top10_depth_binary.where(df_top10_depth_binary == 0, other=1)
+# df_depth_binary = df_depth_binary.T  # Transpose the DataFrame
 
-# Create a heatmap with binary values
-sns.heatmap(df_depth_binary, annot=True, cmap='coolwarm', vmin=0, vmax=1,
-            cbar=False, square=True, linewidths=0.5, linecolor='gray')
+# # Create a heatmap with binary values
+# sns.heatmap(df_depth_binary, annot=True, cmap='coolwarm', vmin=0, vmax=1,
+#             cbar=False, square=True, linewidths=0.5, linecolor='gray')
 
-# Remove x-axis title
-ax.set_xlabel('')
+# # Remove x-axis title
+# ax.set_xlabel('')
 
-# Custom legend
-legend_handles = [Patch(facecolor='blue', label='0: does not exist in top10'),
-                  Patch(facecolor='red', label='1: exists in top10')]
-ax.legend(handles=legend_handles, title='Legend', loc='upper left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
+# # Custom legend
+# legend_handles = [Patch(facecolor='blue', label='0: does not exist in top10'),
+#                   Patch(facecolor='red', label='1: exists in top10')]
+# ax.legend(handles=legend_handles, title='Legend', loc='upper left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
 
-# Add axis labels and title
-ax.set_ylabel('Depths')
+# # Add axis labels and title
+# ax.set_ylabel('Depths')
 
-# Save and show the plot
-plt.subplots_adjust(right=0.85)  # Adjust right margin to make room for the legend
-plt.savefig(output_folder / 'binarymap_depth.png', dpi=300, bbox_inches='tight')
+# # Save and show the plot
+# plt.subplots_adjust(right=0.85)  # Adjust right margin to make room for the legend
+# plt.savefig(output_folder / 'binarymap_depth.png', dpi=300, bbox_inches='tight')
+
+# Join phylum data with top10 data
+df_top10 = df_top10.join(phylum_data.set_index('Genome'), how='left')
+
+# Fill NaN with 0 for binary heatmap
+df_binary = df_top10.notnull().astype(int)
+
+# Sort the dataframe by Phylum
+df_top10['Phylum'] = df_top10.index.map(phylum_data.set_index('Genome')['Phylum'])
+df_sorted = df_top10.sort_values(by=['Phylum', 'depth5m', 'depth10m', 'depth15m', 'depth23.5m'], ascending=[True, False, False, False, False])
+df_binary_sorted = df_binary.loc[df_sorted.index]
+
+# Create the heatmap with annotations
+fig, ax = plt.subplots(figsize=(15, 12))
+sns.heatmap(df_binary_sorted.iloc[:, :-1], cmap='coolwarm', cbar=False, linewidths=0.5, linecolor='gray', annot=True, ax=ax)
+
+
+# Move the x-axis (depths) to the top
+ax.xaxis.set_ticks_position('top')
+ax.xaxis.set_label_position('top')
+
+# Add horizontal lines and annotations to group the taxonomic groups by phylum
+unique_phyla = df_sorted['Phylum'].unique()
+previous_phylum = None
+for idx, genome in enumerate(df_sorted.index):
+    current_phylum = df_sorted.loc[genome, 'Phylum']
+    if previous_phylum and previous_phylum != current_phylum:
+        ax.axhline(y=idx, color='black', linestyle='--')
+    previous_phylum = current_phylum
+
+# Annotate the last group
+if previous_phylum:
+    ax.text(-0.5, len(df_sorted) - 0.5, previous_phylum, verticalalignment='center', fontsize=10, color='black')
+
+# Custom legend with descriptive labels
+legend_handles = [Patch(facecolor='blue', label='Not In top10'),
+                  Patch(facecolor='red', label='In top10')]
+ax.legend(handles=legend_handles, title='Presence in Top 10', loc='upper left', bbox_to_anchor=(1.05, 1))
+
+plt.tight_layout()
+plt.savefig(output_folder /'binarymap_depth.svg', format='svg', dpi=300, bbox_inches='tight')
 
 #Figure 7
 
