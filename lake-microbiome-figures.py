@@ -87,9 +87,10 @@ ax.boxplot(sep,positions=[3], widths=0.6)
 ax.boxplot(october,positions=[4], widths=0.6)
 
 labels = ['July(3 samples)','August(6 samples)','September(2 samples)','October(5 samples)']
-ax.set_xticklabels(labels)
+ax.set_xticklabels(labels, fontsize=16)  # Increase font size for x-axis labels
 
-plt.ylabel('The relative abundance of genomes')
+ax.set_ylabel('The relative abundance of genomes', fontsize=16)
+plt.tick_params(axis='both', which='major', labelsize=13)  # Increase font size for tick labels
 plt.savefig(output_folder /'month_abundance.png', dpi=300)
 #august has more outliers than all the other months
 
@@ -232,9 +233,11 @@ ax.boxplot(fifteen,positions=[3], widths=0.6)
 ax.boxplot(twenth2_5,positions=[4], widths=0.6)
 
 labels = ['5m(2 samples)','10m(2 samples)','15m(6 samples)','23.5m(6 samples)']
-ax.set_xticklabels(labels)
+ax.set_xticklabels(labels, fontsize=16)  # Increase font size for x-axis labels
 
-plt.ylabel('The relative abundance of genomes')
+ax.set_ylabel('The relative abundance of genomes', fontsize=16)
+plt.tick_params(axis='both', which='major', labelsize=13)
+
 plt.savefig(output_folder /'depth_abundance.png', dpi=300)
 
 sorted_five = five.sort_values(ascending=False)
@@ -450,9 +453,10 @@ plt.figure(figsize=(25, 15))
 sns.barplot(x='Frequency', y='Genome', data=df)
 
 # Set the plot title and axis labels with increased font sizes
-plt.ylabel("Genome", fontsize=20)  # Increase font size for y-axis title
-plt.yticks(fontsize=20)  # Increase font size for y-axis tick labels
+plt.ylabel("Genome", fontsize=24)  # Increase font size for y-axis title
+plt.yticks(fontsize=24)  # Increase font size for y-axis tick labels
 plt.xlabel("")  # Remove the x-axis label
+plt.xticks(fontsize=24) 
 
 
 # Save the plot ensuring that all layout elements fit well
