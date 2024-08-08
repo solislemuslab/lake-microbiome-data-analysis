@@ -1,4 +1,4 @@
-### `data`
+# data
 This directory stores the raw data files used in the project analyses. The following files are included:
 
 - **`MAG_taxonomy.tsv`**: This file contains taxonomic information for metagenome-assembled genomes (MAGs). It includes classifications at various taxonomic levels, providing a foundational dataset for understanding microbial identities.
