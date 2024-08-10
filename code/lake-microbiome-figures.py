@@ -12,7 +12,7 @@ output_folder = Path("OutputFigures")
 output_folder.mkdir(exist_ok=True)  # Create the folder if it does not exist
 
 
-data = pd.read_csv("Fw_ lake mendota data/coverm_431_MAGS_metagenomes_reads_count.csv")
+data = pd.read_csv("coverm_431_MAGS_metagenomes_reads_count.csv")
 data=data.T
 data.columns = data.iloc[0]
 
@@ -438,7 +438,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-# Assuming all_dic is a dictionary defined elsewhere in your code
+# Load the taxonomy data from the TSV file
+file_path = 'MAG_taxonomy.tsv'
+taxonomy_data = pd.read_csv(file_path, sep='\t')
+
+# Create a dictionary mapping genomes to their phylum
+genome_phylum_dict = pd.Series(taxonomy_data.Phylum.values, index=taxonomy_data.Genome).to_dict()
+
+# Assuming all_dic is a dictionary defined elsewhere in your code with genome IDs and some numeric values
 all_dic = dict(sorted(all_dic.items(), key=lambda item: item[1], reverse=True))
 
 # Convert the dictionary to a DataFrame
@@ -448,20 +455,26 @@ df = pd.DataFrame(data)
 # Sort the DataFrame by 'Frequency' in descending order
 df.sort_values(by='Frequency', ascending=False, inplace=True)
 
+# Incorporate phylum information
+df['Phylum'] = df['Genome'].map(genome_phylum_dict)
+
 # Create the horizontal bar plot
 plt.figure(figsize=(25, 15))
-sns.barplot(x='Frequency', y='Genome', data=df)
+bar_plot = sns.barplot(x='Frequency', y='Genome', data=df)
 
 # Set the plot title and axis labels with increased font sizes
 plt.ylabel("Genome", fontsize=24)  # Increase font size for y-axis title
 plt.yticks(fontsize=24)  # Increase font size for y-axis tick labels
 plt.xlabel("")  # Remove the x-axis label
-plt.xticks(fontsize=24) 
+plt.xticks(fontsize=24)  # Increase font size for x-axis tick labels
 
+# Add labels for the phylum to the bars
+for index, row in df.iterrows():
+    bar_plot.text(row['Frequency'] + 0.01, index, str(row['Phylum']), color='black', ha="left", va='center', fontsize=24)
 
 # Save the plot ensuring that all layout elements fit well
 plt.tight_layout()  # Adjust subplots to give some padding and prevent cut-off
-plt.savefig(output_folder / 'Sum_ratio.png', dpi=300)
+plt.savefig(output_folder /'Sum_ratio.png', dpi=300)
 
 
 #Figure 8
