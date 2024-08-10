@@ -12,7 +12,7 @@ library(dplyr)
 library(CARlasso)
 
 #Figure 10
-taxonomy_file_path = 'Fw_ lake mendota data/MAG_taxonomy.tsv'
+taxonomy_file_path = 'MAG_taxonomy.tsv'
 taxonomy_df = read.csv(taxonomy_file_path, sep='\t')
 genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
 
