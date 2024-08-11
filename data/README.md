@@ -18,7 +18,8 @@ Below, you will find a comprehensive overview of each data file stored in this d
 | **MAG_taxonomy.tsv**                              | Provides taxonomic classifications for metagenome-assembled genomes (MAGs), essential for identifying microbial entities.     |
 | **coverm_431_MAGS_metagenomes_reads_count.csv**   | Contains read count data from metagenomic sequencing of 431 MAGs, used to quantify genome abundance across samples.            |
 | **coverm_431_MAGS_metatranscriptome_count.tsv**   | Features transcriptome count data for 431 MAGs, indicating gene expression levels under various conditions.                   |
-| **t_count_columnC.csv**                           | Transposed version of the **coverm_431_MAGS_metagenomes_reads_count.csv**, including environmental parameters extracted for each sample from the Environmental data files.                            |
+| **Metagenomic_columnC.csv**                           | Transposed version of the **coverm_431_MAGS_metagenomes_reads_count.csv**, including environmental parameters extracted for each sample from the Environmental data files.                            |
+| **metatransciptome_columnC.csv**                  | Transposed version of the **ccoverm_431_MAGS_metatranscriptome_count.tsv**, including environmental parameters extracted for each sample from the Environmental data files.   
 
 #### Environmental Data Files
 
