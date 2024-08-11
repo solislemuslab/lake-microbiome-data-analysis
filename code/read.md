@@ -1,32 +1,71 @@
 # code
 
-This directory contains the essential scripts used to generate all figures for our research paper on lake microbiomes data. The primary scripts are `lake-microbiome-figures.py` for processing lake microbiome data and `Car-figures.R` for genertating CARlasso model related figures. Upon execution, these scripts generate a new directory named `OutputFigures`, where all the resulting figures are stored.
+This document provides explanations of the Python and R scripts in this repository, along with a tutorial on how to reproduce the experiment results. The primary focus of these scripts is on processing lake microbiome data and visualizing the results.
 
 ## Scripts Overview
 
-- `lake-microbiome-figures.py`: Analyzes comparative and Correlative lake microbiome data of Microbial Abundance in Varied Environmental Conditions and generates corresponding figures.
-- `Car-figures.R`:Using CARlasso model to identify Connections Between MAGs and Environmental Parameters and produces the necessary visualizations.
+| Script File                          | Description                                                                                                           |
+|--------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| **Metagenomic_Networkfile.py**       | Generates a directory containing files using the SPIEC-EASI algorithm as well as fraction method for metagenomic data analysis. Serves as input for `Metagenomic_Network.Rmd`. |
+| **Metatransciptome_Networkfile.py**  | Similar function for metatranscriptomic data, generating input files for `Metatransciptomic_Network.Rmd`.             |
+| **lake-microbiome-figures.py**       | Analyzes microbial abundance in varied environmental conditions and generates visualizations.                         |
+| **Metagenomic_Network.Rmd**          | R Markdown file that explores connections between MAGs and environmental parameters that includes seven different feature selection methods, four permutation tests, and three percentage analyses. Outputs CarLasso models.         |
+| **Metatransciptomic_Network.Rmd**    | Complements the Metagenomic analysis by focusing on metatranscriptomic data to produce comparative CarLasso models.  |
+| **Car-figures.R**                    | Uses the CARlasso model to identify and visualize connections between MAGs and environmental parameters.               |
+
 
 ## Prerequisites
 
-Before running the scripts, ensure you have the following installed:
+Ensure you have the following software installed before running the scripts:
 
-- **Python** (recommended version 3.8 or higher)
-- **R** (recommended version 4.0 or higher)
+- **Python**: Version 3.8 or higher recommended.
+- **R**: Version 4.0 or higher recommended.
 
-### Run the 2 python code for this project
-In terminal Run the py files by
-```{sh}
-python lake-microbiome-figures.py
+## Running the Scripts
+
+
+### Execute the Code
+
+Run the Python and R scripts by executing these commands in your terminal:
+
+```bash
+# Generate network files
+python3 Metagenomic_Networkfile.py
+python3 Metatransciptome_Networkfile.py
+
+# Run R Markdown analyses
+Rscript -e "rmarkdown::render('Metagenomic_Network.Rmd')"
+Rscript -e "rmarkdown::render('Metatransciptomic_Network.Rmd')"
+
+# Generate figures
+python3 lake-microbiome-figures.py
 Rscript Car-figures.R
-```
 
 
-Metagenomic_Network.Rmd---This study explores connections between Bacteria and Archaea metagenome-assembled genomes (MAG) in lake and environmental parameters, analyzing raw count data from 16 bulk metagenomic samples. It build the CarLasso model based on 7 differeent feature selection methods, 4 permutation tests, and 3 percentage analysis.
+For running these code, automatically create the following folder as input of algorithms.
 
-Metatransciptomic_Network.Rmd---This study explores connections between Bacteria and Archaea metagenome-assembled genomes (MAG) in lake and environmental parameters, analyzing Metatransciptomic data from 16 bulk metagenomic samples. It build the CarLasso model based on 7 differeent feature selection methods, 4 permutation tests, and 3 percentage analysis.
+| Folder Name                     | File Name                   | Description                                                                                      |
+|---------------------------------|-----------------------------|--------------------------------------------------------------------------------------------------|
+| **Metagenomic_Networkfile**     | `tax_10.csv`                | Contains basic taxonomic data with sample-specific metrics for metagenomic analysis.             |
+|      | `tax_15.csv`                | Extended taxonomic data providing additional metrics for deeper analysis.                        |
+|      | `tax_Betweenness.csv`       | Includes betweenness centrality metrics for taxa, highlighting nodes that bridge network clusters.|
+|      | `tax_Closeness.csv`         | Features closeness centrality metrics for taxa, indicating the closeness to all other nodes.     |
+|      | `tax_D-B-C-E-P.csv`         | Combined file with degree, betweenness, closeness, eigenvector, and PageRank centrality metrics. |
+|     | `tax_Degree.csv`            | Contains degree centrality metrics, showing the number of direct connections each taxon has.     |
+|      | `tax_Page_Rank.csv`         | Provides PageRank centrality scores, highlighting the influence of each taxon within the network.|
+| **Metatransciptome_Networkfile**| `tax_10.csv`                | Contains basic taxonomic data with sample-specific metrics for metatranscriptomic analysis.      |
+| | `tax_15.csv`                | Extended taxonomic data providing additional metrics for deeper transcriptomic analysis.         |
+| | `tax_Betweenness.csv`       | Includes betweenness centrality metrics for taxa, highlighting crucial nodes in the transcript network. |
+| | `tax_Closeness.csv`         | Features closeness centrality metrics for taxa, indicating their closeness to all other nodes in the network. |
+|| `tax_D-B-C-E-P.csv`         | Combined file with centrality metrics such as degree, betweenness, closeness, eigenvector, and PageRank for transcriptomic data. |
+|| `tax_Degree.csv`            | Contains degree centrality metrics, showing the number of direct connections each taxon has in the transcriptome. |
+| | `tax_Page_Rank.csv`         | Provides PageRank centrality scores, highlighting the influence of each taxon within the transcriptomic network. |
+| **OutputFigures**               | -                           | Contains all figures generated by the scripts, showcasing visual representations of data analyses conducted in the research paper. |
 
-## Run the code
-For running these code, create the `OutputFigures` directory that contain all the figures generated by the scripts. Navigate to this directory to view the visual representations used in the paper. 
+
+
+
+For running Metagenomic_Network.Rmd, Metatransciptomic_Network.Rmd, Car-figures.R, the following folder are required: Metagenomic_Networkfile, Metagenomic_Networkfile
+
 
 
