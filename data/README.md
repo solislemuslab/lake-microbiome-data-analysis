@@ -1,5 +1,5 @@
 # data
-This directory stores the raw data files used in the project analyses. The following files are included:
+This directory contains all the raw data files necessary for our analyses, focusing on microbial communities and their environmental interactions.
 
 ## Directory Contents
 
@@ -26,10 +26,21 @@ This subsection details the CSV and Excel files located within the **2020 Profil
 
 | File Name                                | Description                                                                                          |
 |------------------------------------------|------------------------------------------------------------------------------------------------------|
-| **ME_profile_071620_0.csv**              | Environmental data from July 16, 2020, detailing measurements taken at various depths.               |
-| **ME_profile_072420_0.csv**              | Data from July 24, 2020, capturing a snapshot of environmental conditions on this date.              |
-| **...**                                  | Additional CSV files follow a similar naming convention and content structure.                       |
-| **EnvironmentalData2020-Mendota.xlsx**   | A comprehensive Excel file summarizing all environmental data collected in 2020 for Lake Mendota.    |
+| **ME_profile_071620.csv**              | Measurements taken on 2020/07/16. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **ME_profile_072420.csv**              | Measurements taken on 2020/07/24. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **ME_profile_072920.csv**              | Measurements taken on 2020/07/29. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **ME_profile_080520.csv**              | Measurements taken on 2020/08/05. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **ME_profile_081820.csv**              | Measurements taken on 2020/08/18. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **ME_profile_082520.csv**              | Measurements taken on 2020/08/25. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **ME_profile_090120.csv**              | Measurements taken on 2020/09/01. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **ME_profile_091120.csv**              | Measurements taken on 2020/09/11. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **ME_profile_100220.csv**              | Measurements taken on 2020/10/02. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **ME_profile_100820.csv**              | Measurements taken on 2020/10/08. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **ME_profile_101920.csv**              | Measurements taken on 2020/10/19. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **ME_profile_110620.csv**              | Measurements taken on 2020/11/06. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **ME_profile_111220.csv**              | Measurements taken on 2020/11/12. Includes environmental parameters such as temperature, pH, nutrient concentrations, and more. |
+| **EnvironmentalData2020-Mendota.xlsx**   | This Excel file provides detailed descriptions for each of the environmental parameters measured in the CSV files, serving as a comprehensive guide to understanding the data collected throughout 2020. |
+
 
 ## Usage Guidelines
 
