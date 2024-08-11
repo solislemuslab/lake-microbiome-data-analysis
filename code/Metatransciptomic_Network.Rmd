@@ -1,0 +1,1495 @@
+---
+title: "CarLasso_Network(metatransciptome)"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: united
+---
+# Analysis 1
+## Figure 1
+```{r, fig.width=10, fig.height=8, fig.cap="Network of Top10 OTUs with All Environmental Features"}
+library(CARlasso)
+library(dplyr)
+set.seed(42)
+changed_col<-read.csv("metatransciptome_Networkfile/tax_10.csv")
+changed_col$DO_mg_L <- ifelse(changed_col$DO_mg_L < 0, 0, changed_col$DO_mg_L)
+last_10_cols <- tail(names(changed_col), 10)
+changed_col <- changed_col%>%
+  mutate(across(all_of(last_10_cols), ~scale(., center = min(.), scale = max(.) - min(.))[,1]))
+otu_res <- CARlasso(p__Proteobacteria_1+p__Verrucomicrobiota_2+p__Bacteroidota_3+p__Proteobacteria_4+p__Proteobacteria_5+p__Proteobacteria_6+ p__Verrucomicrobiota_7+p__Bacteroidota_8+p__Actinobacteriota_9+p__Proteobacteria_10~depth+wtemp_in_celsius+specific_conductivity+chlorophyll_RFU+phycocyanin_RFU+ Dissolved_organic_matter_RFU+Turbidity_RFU+DO_mg_L+PH, data = changed_col, adaptive = TRUE, link="log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+otu_res <- horseshoe(otu_res)
+
+
+genomes_list <- c(
+  'Ga0485157_metabat1.059',
+  'Ga0485167_maxbin.109',
+  'Ga0485162_maxbin.089',
+  'Ga0485161_maxbin.110',
+  'Ga0485161_maxbin.075',
+  'Ga0485157_metabat1.036',
+  'Ga0485165_metabat2_ours.012_sub',
+  'Ga0485169_maxbin.201_sub',
+  'Ga0485172_maxbin.081_sub',
+  'Ga0485168_maxbin.153'
+)
+
+# Load the taxonomy data
+taxonomy_file_path <- 'MAG_taxonomy.tsv'
+taxonomy_df <- read.csv(taxonomy_file_path, sep='\t')
+
+# Load the transcriptome count data
+t_count_file_path <- 'metatransciptome_columnC.csv'
+t_count_df <- read.csv(t_count_file_path)
+
+# Create a list of maps for each taxonomy level
+genome_to_domain_map <- setNames(taxonomy_df$Domain, taxonomy_df$Genome)
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+genome_to_class_map <- setNames(taxonomy_df$Class, taxonomy_df$Genome)
+genome_to_order_map <- setNames(taxonomy_df$Order, taxonomy_df$Genome)
+genome_to_family_map <- setNames(taxonomy_df$Family, taxonomy_df$Genome)
+genome_to_genus_map <- setNames(taxonomy_df$Genus, taxonomy_df$Genome)
+genome_to_species_map <- setNames(taxonomy_df$Species, taxonomy_df$Genome)
+
+# Extract taxonomy for each genome in your list
+domain_names <- sapply(genomes_list, function(genome) genome_to_domain_map[[genome]])
+phylum_names <- sapply(genomes_list, function(genome) genome_to_phylum_map[[genome]])
+class_names <- sapply(genomes_list, function(genome) genome_to_class_map[[genome]])
+order_names <- sapply(genomes_list, function(genome) genome_to_order_map[[genome]])
+family_names <- sapply(genomes_list, function(genome) genome_to_family_map[[genome]])
+genus_names <- sapply(genomes_list, function(genome) genome_to_genus_map[[genome]])
+species_names <- sapply(genomes_list, function(genome) genome_to_species_map[[genome]])
+
+new_column_names <- paste(phylum_names, seq_along(genomes_list), sep="_")
+
+# Create the reference table with all levels
+reference_table <- data.frame(
+  Original_Genome = genomes_list,
+  Node_Name = new_column_names,
+  Domain = domain_names,
+  Phylum = phylum_names,
+  Class = class_names,
+  Order = order_names,
+  Family = family_names,
+  Genus = genus_names,
+  Species = species_names
+)
+
+
+plot(otu_res)
+```
+
+## Table 1
+```{r}
+print(reference_table)
+
+```
+
+# Analysis 2
+
+## Figure 2
+```{r, fig.width=10, fig.height=8}
+library(CARlasso)
+set.seed(42)
+changed_col<-read.csv("metatransciptome_Networkfile/tax_15.csv")
+changed_col$DO_mg_L <- ifelse(changed_col$DO_mg_L < 0, 0, changed_col$DO_mg_L)
+last_10_cols <- tail(names(changed_col), 10)
+changed_col <- changed_col%>%
+  mutate(across(all_of(last_10_cols), ~scale(., center = min(.), scale = max(.) - min(.))[,1]))
+otu_res <- CARlasso(p__Proteobacteria_1+p__Verrucomicrobiota_2+p__Bacteroidota_3+p__Proteobacteria_4+p__Proteobacteria_5+p__Proteobacteria_6+ p__Verrucomicrobiota_7+p__Bacteroidota_8+p__Actinobacteriota_9+p__Proteobacteria_10+p__Proteobacteria_11+p__Actinobacteriota_12+p__Actinobacteriota_13+p__Verrucomicrobiota_14+p__Desulfobacterota_15~depth+wtemp_in_celsius+specific_conductivity+chlorophyll_RFU+phycocyanin_RFU+Dissolved_organic_matter_RFU+Turbidity_RFU+DO_mg_L+PH, data = changed_col, adaptive = TRUE, link="log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+otu_res <- horseshoe(otu_res)
+
+
+genomes_list <- c(
+  'Ga0485157_metabat1.059',
+    'Ga0485167_maxbin.109',
+    'Ga0485162_maxbin.089',
+    'Ga0485161_maxbin.110',
+    'Ga0485161_maxbin.075',
+    'Ga0485157_metabat1.036',
+    'Ga0485165_metabat2_ours.012_sub',
+    'Ga0485169_maxbin.201_sub',
+    'Ga0485172_maxbin.081_sub',
+    'Ga0485168_maxbin.153',
+    'Ga0485172_metabat2_ours.083',
+    'Ga0485162_maxbin.023',
+    'Ga0485160_maxbin.092',
+    'Ga0485158_metabat2_jgi.024',
+    'Ga0485162_metabat1.001'
+)
+
+
+# Create a list of maps for each taxonomy level
+genome_to_domain_map <- setNames(taxonomy_df$Domain, taxonomy_df$Genome)
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+genome_to_class_map <- setNames(taxonomy_df$Class, taxonomy_df$Genome)
+genome_to_order_map <- setNames(taxonomy_df$Order, taxonomy_df$Genome)
+genome_to_family_map <- setNames(taxonomy_df$Family, taxonomy_df$Genome)
+genome_to_genus_map <- setNames(taxonomy_df$Genus, taxonomy_df$Genome)
+genome_to_species_map <- setNames(taxonomy_df$Species, taxonomy_df$Genome)
+
+# Extract taxonomy for each genome in your list
+domain_names <- sapply(genomes_list, function(genome) genome_to_domain_map[[genome]])
+phylum_names <- sapply(genomes_list, function(genome) genome_to_phylum_map[[genome]])
+class_names <- sapply(genomes_list, function(genome) genome_to_class_map[[genome]])
+order_names <- sapply(genomes_list, function(genome) genome_to_order_map[[genome]])
+family_names <- sapply(genomes_list, function(genome) genome_to_family_map[[genome]])
+genus_names <- sapply(genomes_list, function(genome) genome_to_genus_map[[genome]])
+species_names <- sapply(genomes_list, function(genome) genome_to_species_map[[genome]])
+
+new_column_names <- paste(phylum_names, seq_along(genomes_list), sep="_")
+
+# Create the reference table with all levels
+reference_table <- data.frame(
+  Original_Genome = genomes_list,
+  Node_Name = new_column_names,
+  Domain = domain_names,
+  Phylum = phylum_names,
+  Class = class_names,
+  Order = order_names,
+  Family = family_names,
+  Genus = genus_names,
+  Species = species_names
+)
+
+
+plot(otu_res)
+```
+
+## Table 2
+```{r}
+print(reference_table)
+
+```
+
+# Analysis 3
+## Figure 3
+```{r, fig.width=10, fig.height=8}
+library(CARlasso)
+set.seed(42)
+changed_col<-read.csv("metatransciptome_Networkfile/tax_Betweenness.csv")
+changed_col$DO_mg_L <- ifelse(changed_col$DO_mg_L < 0, 0, changed_col$DO_mg_L)
+last_10_cols <- tail(names(changed_col), 10)
+changed_col <- changed_col%>%
+  mutate(across(all_of(last_10_cols), ~scale(., center = min(.), scale = max(.) - min(.))[,1]))
+otu_res <- CARlasso(p__Desulfobacterota_1
++p__Planctomycetota_2
++p__Proteobacteria_3
++p__Chloroflexota_4
++p__Bacteroidota_5
++p__Verrucomicrobiota_6
++p__Proteobacteria_7
++p__Actinobacteriota_8
++p__Krumholzibacteriota_9
++p__Armatimonadota_10
++p__Bacteroidota_11
++p__Verrucomicrobiota_12
++p__Actinobacteriota_13
++p__Firmicutes_A_14
++p__Desulfobacterota_15~depth+wtemp_in_celsius+specific_conductivity+chlorophyll_RFU+phycocyanin_RFU+Dissolved_organic_matter_RFU+Turbidity_RFU+DO_mg_L+PH, data = changed_col, adaptive = TRUE, link="log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+otu_res <- horseshoe(otu_res)
+
+
+genomes_list <- c(
+  "Ga0485158_maxbin.120_sub",
+"Ga0485170_maxbin.090",
+"Ga0485159_metabat1.040",
+"Ga0485167_metabat2_ours.163",
+"Ga0485166_metabat2_ours.038",
+"Ga0485162_metabat2_ours.116",
+"Ga0485162_metabat2_ours.050",
+"Ga0485163_metabat1.181",
+"Ga0485158_metabat2_ours.098",
+"Ga0485169_metabat2_ours.035",
+"Ga0485159_metabat2_ours.130_sub",
+"Ga0485163_metabat1.115_sub",
+"Ga0485159_maxbin.025",
+"Ga0485161_metabat1.096",
+"Ga0485167_metabat1.127_sub"
+)
+
+# Create a list of maps for each taxonomy level
+genome_to_domain_map <- setNames(taxonomy_df$Domain, taxonomy_df$Genome)
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+genome_to_class_map <- setNames(taxonomy_df$Class, taxonomy_df$Genome)
+genome_to_order_map <- setNames(taxonomy_df$Order, taxonomy_df$Genome)
+genome_to_family_map <- setNames(taxonomy_df$Family, taxonomy_df$Genome)
+genome_to_genus_map <- setNames(taxonomy_df$Genus, taxonomy_df$Genome)
+genome_to_species_map <- setNames(taxonomy_df$Species, taxonomy_df$Genome)
+
+# Extract taxonomy for each genome in your list
+domain_names <- sapply(genomes_list, function(genome) genome_to_domain_map[[genome]])
+phylum_names <- sapply(genomes_list, function(genome) genome_to_phylum_map[[genome]])
+class_names <- sapply(genomes_list, function(genome) genome_to_class_map[[genome]])
+order_names <- sapply(genomes_list, function(genome) genome_to_order_map[[genome]])
+family_names <- sapply(genomes_list, function(genome) genome_to_family_map[[genome]])
+genus_names <- sapply(genomes_list, function(genome) genome_to_genus_map[[genome]])
+species_names <- sapply(genomes_list, function(genome) genome_to_species_map[[genome]])
+
+new_column_names <- paste(phylum_names, seq_along(genomes_list), sep="_")
+
+# Create the reference table with all levels
+reference_table <- data.frame(
+  Original_Genome = genomes_list,
+  Node_Name = new_column_names,
+  Domain = domain_names,
+  Phylum = phylum_names,
+  Class = class_names,
+  Order = order_names,
+  Family = family_names,
+  Genus = genus_names,
+  Species = species_names
+)
+
+plot(otu_res)
+```
+
+## Table 3
+```{r}
+print(reference_table)
+
+```
+
+# Analysis 4
+
+## Figure 4
+```{r, fig.width=10, fig.height=8}
+library(CARlasso)
+set.seed(42)
+changed_col<-read.csv("metatransciptome_Networkfile/tax_Closeness.csv")
+changed_col$DO_mg_L <- ifelse(changed_col$DO_mg_L < 0, 0, changed_col$DO_mg_L)
+last_10_cols <- tail(names(changed_col), 10)
+changed_col <- changed_col%>%
+  mutate(across(all_of(last_10_cols), ~scale(., center = min(.), scale = max(.) - min(.))[,1]))
+otu_res <- CARlasso(p__Verrucomicrobiota_1+p__Actinobacteriota_2
++p__Bacteroidota_3
++p__Bacteroidota_4
++p__Bacteroidota_5
++p__Actinobacteriota_6
++p__Bacteroidota_7
++p__Bacteroidota_8
++p__Actinobacteriota_9
++p__Proteobacteria_10
++p__Planctomycetota_11
++p__Proteobacteria_12
++p__Proteobacteria_13
++p__Bacteroidota_14
++p__Verrucomicrobiota_15~depth+wtemp_in_celsius+specific_conductivity+chlorophyll_RFU+phycocyanin_RFU+Dissolved_organic_matter_RFU+Turbidity_RFU+DO_mg_L+PH, data = changed_col, adaptive = TRUE, link="log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+otu_res <- horseshoe(otu_res)
+
+
+genomes_list <- c(
+  "Ga0485157_metabat1.069",
+"Ga0485157_metabat2_ours.025",
+"Ga0485157_metabat2_ours.091",
+"Ga0485158_metabat2_ours.184",
+"Ga0485159_maxbin.015",
+"Ga0485160_maxbin.155_sub",
+"Ga0485160_metabat2_ours.051",
+"Ga0485160_metabat2_ours.071",
+"Ga0485161_metabat1.109_sub",
+"Ga0485162_metabat2_ours.036",
+"Ga0485163_maxbin.002_sub",
+"Ga0485163_maxbin.104_sub",
+"Ga0485163_maxbin.129",
+"Ga0485163_maxbin.130_sub",
+"Ga0485163_maxbin.183_sub"
+)
+
+
+# Create a list of maps for each taxonomy level
+genome_to_domain_map <- setNames(taxonomy_df$Domain, taxonomy_df$Genome)
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+genome_to_class_map <- setNames(taxonomy_df$Class, taxonomy_df$Genome)
+genome_to_order_map <- setNames(taxonomy_df$Order, taxonomy_df$Genome)
+genome_to_family_map <- setNames(taxonomy_df$Family, taxonomy_df$Genome)
+genome_to_genus_map <- setNames(taxonomy_df$Genus, taxonomy_df$Genome)
+genome_to_species_map <- setNames(taxonomy_df$Species, taxonomy_df$Genome)
+
+# Extract taxonomy for each genome in your list
+domain_names <- sapply(genomes_list, function(genome) genome_to_domain_map[[genome]])
+phylum_names <- sapply(genomes_list, function(genome) genome_to_phylum_map[[genome]])
+class_names <- sapply(genomes_list, function(genome) genome_to_class_map[[genome]])
+order_names <- sapply(genomes_list, function(genome) genome_to_order_map[[genome]])
+family_names <- sapply(genomes_list, function(genome) genome_to_family_map[[genome]])
+genus_names <- sapply(genomes_list, function(genome) genome_to_genus_map[[genome]])
+species_names <- sapply(genomes_list, function(genome) genome_to_species_map[[genome]])
+
+new_column_names <- paste(phylum_names, seq_along(genomes_list), sep="_")
+
+# Create the reference table with all levels
+reference_table <- data.frame(
+  Original_Genome = genomes_list,
+  Node_Name = new_column_names,
+  Domain = domain_names,
+  Phylum = phylum_names,
+  Class = class_names,
+  Order = order_names,
+  Family = family_names,
+  Genus = genus_names,
+  Species = species_names
+)
+
+plot(otu_res)
+```
+
+## Table 4
+```{r}
+print(reference_table)
+
+```
+
+# Analysis 5
+
+## Figure 5
+```{r, fig.width=10, fig.height=8}
+library(CARlasso)
+library(dplyr)
+set.seed(42)
+changed_col<-read.csv("metatransciptome_Networkfile/tax_Page_Rank.csv")
+changed_col$DO_mg_L <- ifelse(changed_col$DO_mg_L < 0, 0, changed_col$DO_mg_L)
+last_10_cols <- tail(names(changed_col), 10)
+changed_col <- changed_col%>%
+  mutate(across(all_of(last_10_cols), ~scale(., center = min(.), scale = max(.) - min(.))[,1]))
+otu_res <- CARlasso(p__Krumholzibacteriota_1
++p__Bacteroidota_2
++p__Verrucomicrobiota_3
++p__Planctomycetota_4
++p__Verrucomicrobiota_5
++p__Planctomycetota_6
++p__Proteobacteria_7
++p__Proteobacteria_8
++p__Bacteroidota_9
++p__Bacteroidota_10
++p__Bacteroidota_11
++p__Actinobacteriota_12
++p__Verrucomicrobiota_13
++p__Proteobacteria_14
++p__Planctomycetota_15~depth+wtemp_in_celsius+specific_conductivity+chlorophyll_RFU+phycocyanin_RFU+Dissolved_organic_matter_RFU+Turbidity_RFU+DO_mg_L+PH, data = changed_col, adaptive = TRUE, link="log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+otu_res <- horseshoe(otu_res)
+
+
+genomes_list <- c(
+  "Ga0485158_metabat2_ours.098",
+"Ga0485166_metabat2_ours.038",
+"Ga0485167_metabat2_ours.023",
+"Ga0485170_maxbin.090",
+"Ga0485161_metabat2_ours.167_sub",
+"Ga0485171_maxbin.130_sub",
+"Ga0485161_maxbin.110",
+"Ga0485164_metabat2_ours.069_sub",
+"Ga0485171_metabat1.063",
+"Ga0485159_metabat2_ours.079",
+"Ga0485171_metabat2_ours.127_sub",
+"Ga0485159_metabat2_ours.155_sub",
+"Ga0485158_metabat1.076",
+"Ga0485171_metabat1.030",
+"Ga0485168_metabat2_ours.135_sub"
+
+)
+
+
+# Create a list of maps for each taxonomy level
+genome_to_domain_map <- setNames(taxonomy_df$Domain, taxonomy_df$Genome)
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+genome_to_class_map <- setNames(taxonomy_df$Class, taxonomy_df$Genome)
+genome_to_order_map <- setNames(taxonomy_df$Order, taxonomy_df$Genome)
+genome_to_family_map <- setNames(taxonomy_df$Family, taxonomy_df$Genome)
+genome_to_genus_map <- setNames(taxonomy_df$Genus, taxonomy_df$Genome)
+genome_to_species_map <- setNames(taxonomy_df$Species, taxonomy_df$Genome)
+
+# Extract taxonomy for each genome in your list
+domain_names <- sapply(genomes_list, function(genome) genome_to_domain_map[[genome]])
+phylum_names <- sapply(genomes_list, function(genome) genome_to_phylum_map[[genome]])
+class_names <- sapply(genomes_list, function(genome) genome_to_class_map[[genome]])
+order_names <- sapply(genomes_list, function(genome) genome_to_order_map[[genome]])
+family_names <- sapply(genomes_list, function(genome) genome_to_family_map[[genome]])
+genus_names <- sapply(genomes_list, function(genome) genome_to_genus_map[[genome]])
+species_names <- sapply(genomes_list, function(genome) genome_to_species_map[[genome]])
+
+new_column_names <- paste(phylum_names, seq_along(genomes_list), sep="_")
+
+# Create the reference table with all levels
+reference_table <- data.frame(
+  Original_Genome = genomes_list,
+  Node_Name = new_column_names,
+  Domain = domain_names,
+  Phylum = phylum_names,
+  Class = class_names,
+  Order = order_names,
+  Family = family_names,
+  Genus = genus_names,
+  Species = species_names
+)
+
+plot(otu_res)
+```
+
+## Table 5
+```{r}
+print(reference_table)# The table Below serves as a reference to the response nodes in the plot!
+```
+
+# Analysis 6
+
+## Figure 6
+```{r, fig.width=10, fig.height=8}
+library(CARlasso)
+
+set.seed(42)
+changed_col<-read.csv("metatransciptome_Networkfile/tax_Degree.csv")
+changed_col$DO_mg_L <- ifelse(changed_col$DO_mg_L < 0, 0, changed_col$DO_mg_L)
+last_10_cols <- tail(names(changed_col), 10)
+changed_col <- changed_col%>%
+  mutate(across(all_of(last_10_cols), ~scale(., center = min(.), scale = max(.) - min(.))[,1]))
+
+otu_res <- CARlasso(p__Krumholzibacteriota_1
++p__Bacteroidota_2
++p__Bacteroidota_3
++p__Proteobacteria_4
++p__Planctomycetota_5
++p__Bacteroidota_6
++p__Chloroflexota_7
++p__Bacteroidota_8
++p__Verrucomicrobiota_9
++p__Actinobacteriota_10
++p__Planctomycetota_11
++p__Chloroflexota_12
++p__Proteobacteria_13
++p__Firmicutes_A_14
++p__Verrucomicrobiota_15~depth+wtemp_in_celsius+specific_conductivity+chlorophyll_RFU+phycocyanin_RFU+Dissolved_organic_matter_RFU+Turbidity_RFU+DO_mg_L+PH, data = changed_col, adaptive = TRUE, link="log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+
+otu_res <- horseshoe(otu_res)
+
+
+genomes_list <- c(
+  "Ga0485158_metabat2_ours.098",
+"Ga0485159_metabat2_ours.079",
+"Ga0485171_metabat2_ours.127_sub",
+"Ga0485171_metabat2_ours.004",
+"Ga0485170_maxbin.090",
+"Ga0485171_metabat1.063",
+"Ga0485157_metabat2_ours.019",
+"Ga0485166_metabat2_ours.038",
+"Ga0485167_metabat2_ours.023",
+"Ga0485170_maxbin.059_sub",
+"Ga0485171_maxbin.130_sub",
+"Ga0485160_metabat2_ours.158_sub",
+"Ga0485161_maxbin.110",
+"Ga0485161_metabat1.096",
+"Ga0485161_metabat2_ours.167_sub"
+
+)
+
+
+# Create a list of maps for each taxonomy level
+genome_to_domain_map <- setNames(taxonomy_df$Domain, taxonomy_df$Genome)
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+genome_to_class_map <- setNames(taxonomy_df$Class, taxonomy_df$Genome)
+genome_to_order_map <- setNames(taxonomy_df$Order, taxonomy_df$Genome)
+genome_to_family_map <- setNames(taxonomy_df$Family, taxonomy_df$Genome)
+genome_to_genus_map <- setNames(taxonomy_df$Genus, taxonomy_df$Genome)
+genome_to_species_map <- setNames(taxonomy_df$Species, taxonomy_df$Genome)
+
+# Extract taxonomy for each genome in your list
+domain_names <- sapply(genomes_list, function(genome) genome_to_domain_map[[genome]])
+phylum_names <- sapply(genomes_list, function(genome) genome_to_phylum_map[[genome]])
+class_names <- sapply(genomes_list, function(genome) genome_to_class_map[[genome]])
+order_names <- sapply(genomes_list, function(genome) genome_to_order_map[[genome]])
+family_names <- sapply(genomes_list, function(genome) genome_to_family_map[[genome]])
+genus_names <- sapply(genomes_list, function(genome) genome_to_genus_map[[genome]])
+species_names <- sapply(genomes_list, function(genome) genome_to_species_map[[genome]])
+
+new_column_names <- paste(phylum_names, seq_along(genomes_list), sep="_")
+
+# Create the reference table with all levels
+reference_table <- data.frame(
+  Original_Genome = genomes_list,
+  Node_Name = new_column_names,
+  Domain = domain_names,
+  Phylum = phylum_names,
+  Class = class_names,
+  Order = order_names,
+  Family = family_names,
+  Genus = genus_names,
+  Species = species_names
+)
+
+plot(otu_res)
+```
+
+## Table 6
+```{r}
+print(reference_table)
+
+```
+
+# Analysis 8(Starting with Permutation)
+In Analysis 8, we delve into the structural significance of the OTU p__Bacteroidota_3 (Ga0485162_maxbin.089) within our microbial network. Recognized for its pivotal role, this genome will undergo a permutation analysis alongside nine other randomly selected OTUs. By systematically substituting this key node with other OTUs and observing the resultant changes in network dynamics, we aim to quantify the impact of p__Bacteroidota_3 on the network’s integrity and functionality.
+
+```{r}
+if (!requireNamespace("readr", quietly = TRUE)) install.packages("readr")
+if (!requireNamespace("dplyr", quietly = TRUE)) install.packages("dplyr")
+library(readr)
+library(dplyr)
+taxonomy_file_path <- 'MAG_taxonomy.tsv'
+taxonomy_df <- read_tsv(taxonomy_file_path)
+t_count_file_path <- 'metatransciptome_columnC.csv'
+t_count_df <- read_csv(t_count_file_path)
+
+# Create a mapping of genomes to phylum
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+
+# Define your specific genomes list
+genomes_list <- c(
+  "Ga0485159_maxbin.004_sub", "Ga0485169_maxbin.078", 'Ga0485162_maxbin.089',
+  "Ga0485162_metabat2_ours.126", "Ga0485159_metabat2_ours.129_sub",
+  "Ga0485163_metabat2_ours.245_sub", "Ga0485162_metabat2_ours.040",
+  "Ga0485160_metabat2_ours.184_sub", "Ga0485172_metabat2_ours.152",
+  "Ga0485161_metabat1.096"
+)
+
+new_column_names_list <- vector("list", length(genomes_list))
+names(new_column_names_list) <- genomes_list
+
+# Reset sequence number in case it's being reused
+seq_num <- 1
+
+for (i in seq_along(genomes_list)) {
+  genome <- genomes_list[i]
+  phylum <- genome_to_phylum_map[genome]
+  
+  # Specific assignment for 'Ga0485162_maxbin.089' to ensure it gets _3
+  if (genome == 'Ga0485162_maxbin.089') {
+    assign_num <- 3
+  } else {
+    # Skip over 3 if it's already been assigned
+    if (seq_num == 3) {
+      seq_num <- 4
+    }
+    assign_num <- seq_num
+    seq_num <- seq_num + 1
+  }
+  
+  if (!is.null(phylum) && genome %in% colnames(t_count_df)) {
+    new_column_name <- paste(phylum, assign_num, sep = "_") # Append underscore and sequence number
+    # Append the new column name to the list in order
+    new_column_names_list[[genome]] <- new_column_name
+    
+    # Rename the column in t_count_df
+    if (genome %in% colnames(t_count_df)) {
+      colnames(t_count_df)[colnames(t_count_df) == genome] <- new_column_name
+    }
+  }
+}
+
+# Remove NULL entries if any genome was not found in t_count_df
+new_column_names_list <- new_column_names_list[!sapply(new_column_names_list, is.null)]
+
+# Display the first few rows of the modified DataFrame to verify changes
+#print(head(t_count_df))
+```
+
+## Figure 8
+```{r, fig.width=10, fig.height=8}
+library(CARlasso)
+set.seed(42)
+t_count_df$DO_mg_L <- ifelse(t_count_df$DO_mg_L < 0, 0, t_count_df$DO_mg_L)
+last_10_cols <- tail(names(t_count_df), 10)
+t_count_df <- t_count_df%>%
+  mutate(across(all_of(last_10_cols), ~scale(., center = min(.), scale = max(.) - min(.))[,1]))
+
+new_column_names_list <- as.character(new_column_names_list)
+sequence_numbers <- sapply(strsplit(new_column_names_list, "_"), function(x) as.numeric(tail(x, 1)))
+
+# Create a named vector with names as original column names and values as extracted sequence numbers
+named_sequences <- setNames(sequence_numbers, new_column_names_list)
+# Sort the named vector by sequence numbers to get the names (original column names) in the correct order
+ordered_names <- names(sort(named_sequences))
+# Construct the predictor part of the formula with column names in the correct order based on sequence numbers
+predictor_formula_part <- paste(ordered_names, collapse = " + ")
+# Construct the full formula by appending the response variables and predictors
+full_formula <- as.formula(paste(predictor_formula_part,"~", "depth + wtemp_in_celsius + specific_conductivity + chlorophyll_RFU + phycocyanin_RFU + Dissolved_organic_matter_RFU + Turbidity_RFU + DO_mg_L + PH "))
+ otu_res <- CARlasso(full_formula, data = t_count_df, adaptive = TRUE, link="log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+otu_res <- horseshoe(otu_res)
+plot(otu_res)
+reference_table <- data.frame(
+  Original_Genome = genomes_list,  
+  Phylum_Levels= ordered_names  
+)
+```
+
+## Table 8
+```{r}
+print(reference_table)
+
+```
+
+## Interpretation
+p__Bacteroidota_3 is no longer strongly connecting to DOM.
+
+# Analysis 9
+In this analysis, we concentrate on the OTU p__Verrucomicrobiota_7(Ga0485165_metabat2_ours.012_sub), distinguished for its significant connections with environmental features as revealed in Analysis 2. Recognizing its critical interactions, we opt to retain this genome while permuting it alongside 14 other randomly selected OTUs within our microbial network.
+
+```{r}
+library(readr)
+data <- read_csv("coverm_431_MAGS_metagenomes_reads_count.csv")
+data_t <- t(data)
+data_df <- as.data.frame(data_t)
+colnames(data_df) <- data_df[1, ]
+data_df <- data_df[-1, ]
+
+excluded_columns <- c('Ga0485157_metabat1.059',
+    'Ga0485167_maxbin.109',
+    'Ga0485162_maxbin.089',
+    'Ga0485161_maxbin.110',
+    'Ga0485161_maxbin.075',
+    'Ga0485157_metabat1.036',
+    'Ga0485165_metabat2_ours.012_sub',
+    'Ga0485169_maxbin.201_sub',
+    'Ga0485172_maxbin.081_sub',
+    'Ga0485168_maxbin.153',
+    'Ga0485172_metabat2_ours.083',
+    'Ga0485162_maxbin.023',
+    'Ga0485160_maxbin.092',
+    'Ga0485158_metabat2_jgi.024',
+    'Ga0485162_metabat1.001')
+
+set.seed(42)
+available_columns <- setdiff(colnames(data_df), excluded_columns)
+random_column_names <- sample(available_columns, 14)
+#print(random_column_names)
+taxonomy_file_path <- 'MAG_taxonomy.tsv'
+taxonomy_df <- read_tsv(taxonomy_file_path)
+t_count_file_path <- 'metatransciptome_columnC.csv'
+t_count_df <- read_csv(t_count_file_path)
+# Create a mapping of genomes to phylum
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+
+# Define your specific genomes list
+genomes_list <- c(
+  "Ga0485159_maxbin.015","Ga0485169_maxbin.202","Ga0485163_maxbin.015_sub","Ga0485159_metabat2_ours.130_sub", "Ga0485164_metabat2_jgi.001", "Ga0485162_metabat2_ours.100_sub","Ga0485165_metabat2_ours.012_sub","Ga0485161_maxbin.064","Ga0485172_metabat2_ours.152"  ,"Ga0485161_metabat2_jgi.003_sub", "Ga0485168_metabat2_ours.036"    
+,"Ga0485157_metabat2_ours.077", "Ga0485169_metabat1.104","Ga0485169_metabat2_ours.239", "Ga0485160_metabat1.067"
+)
+
+new_column_names_list <- vector("list", length(genomes_list))
+names(new_column_names_list) <- genomes_list
+
+seq_num <- 1
+
+for (genome in genomes_list) {
+  phylum <- genome_to_phylum_map[genome]
+  
+  if (!is.null(phylum) && genome %in% colnames(t_count_df)) {
+    # Construct the new column name using the phylum and the current sequence number
+    new_column_name <- paste(phylum, seq_num, sep = "_")
+    
+    # Update the list with the new column name
+    new_column_names_list[genome] <- new_column_name
+    
+    # Rename the column in t_count_df
+    colnames(t_count_df)[colnames(t_count_df) == genome] <- new_column_name
+    
+    # Increment the sequence number for the next iteration
+    seq_num <- seq_num + 1
+  }
+}
+
+# Display the first few rows of the modified DataFrame to verify changes
+#print(head(t_count_df))
+#print(new_column_names_list)
+```
+## Figure 9
+```{r, fig.width=10, fig.height=8}
+library(CARlasso)
+set.seed(42)
+t_count_df$DO_mg_L <- ifelse(t_count_df$DO_mg_L < 0, 0, t_count_df$DO_mg_L)
+last_10_cols <- tail(names(t_count_df), 10)
+t_count_df <- t_count_df%>%
+  mutate(across(all_of(last_10_cols), ~scale(., center = min(.), scale = max(.) - min(.))[,1]))
+
+predictor_formula_part <- paste(new_column_names_list, collapse = " + ")
+# Construct the full formula by appending the response variables and predictors
+full_formula <- as.formula(paste(predictor_formula_part,"~", "depth + wtemp_in_celsius + specific_conductivity + chlorophyll_RFU + phycocyanin_RFU + Dissolved_organic_matter_RFU + Turbidity_RFU +DO_mg_L + PH "))
+ otu_res <- CARlasso(full_formula, data = t_count_df, adaptive = TRUE, link="log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+  otu_res <- horseshoe(otu_res)
+ plot(otu_res)
+ phylum_levels_vector <- unlist(new_column_names_list)
+
+# Create the reference table with genomes_list and the flattened phylum_levels_vector
+reference_table <- data.frame(
+  Original_Genome = names(phylum_levels_vector),  
+  Phylum_Levels = phylum_levels_vector,
+  stringsAsFactors = FALSE,  # Ensuring character data does not convert to factors
+  row.names = NULL 
+)
+```
+
+## Table 9
+```{r}
+print(reference_table)
+
+```
+
+## Interpretation
+p__Verrucomicrobiota_7 is STILL Strongly connecting to PH and DOM, but no longer connecting to P__Proteobacteria 11.
+
+# Analysis 10
+In this study, we turn our attention to the genome p__Bacteroidota_7(Ga0485160_metabat2_ours.051), a key player within our microbial network as identified by its closeness centrality measures. This genome stands out due to its pivotal connections across the network. 
+
+```{r}
+data <- read_csv("coverm_431_MAGS_metagenomes_reads_count.csv")
+data_t <- t(data)
+data_df <- as.data.frame(data_t)
+colnames(data_df) <- data_df[1, ]
+data_df <- data_df[-1, ]
+
+excluded_columns <- c("Ga0485157_metabat1.069",
+"Ga0485157_metabat2_ours.025",
+"Ga0485157_metabat2_ours.091",
+"Ga0485158_metabat2_ours.184",
+"Ga0485159_maxbin.015",
+"Ga0485160_maxbin.155_sub",
+"Ga0485160_metabat2_ours.051",
+"Ga0485160_metabat2_ours.071",
+"Ga0485161_metabat1.109_sub",
+"Ga0485162_metabat2_ours.036",
+"Ga0485163_maxbin.002_sub",
+"Ga0485163_maxbin.104_sub",
+"Ga0485163_maxbin.129",
+"Ga0485163_maxbin.130_sub",
+"Ga0485163_maxbin.183_sub")
+
+set.seed(42)
+available_columns <- setdiff(colnames(data_df), excluded_columns)
+random_column_names <- sample(available_columns, 14)
+taxonomy_file_path <- 'MAG_taxonomy.tsv'
+taxonomy_df <- read_tsv(taxonomy_file_path)
+t_count_file_path <- 'metatransciptome_columnC.csv'
+t_count_df <- read_csv(t_count_file_path)
+# Create a mapping of genomes to phylum
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+
+# Define your specific genomes list
+genomes_list <- c(
+  "Ga0485159_maxbin.027","Ga0485169_maxbin.226_sub","Ga0485163_maxbin.041_sub","Ga0485159_metabat2_ours.135_sub","Ga0485165_metabat1.064_sub","Ga0485162_metabat2_ours.116","Ga0485160_metabat2_ours.051","Ga0485161_metabat1.011","Ga0485172_metabat2_ours.152","Ga0485161_metabat2_ours.019_sub","Ga0485168_metabat2_ours.050_sub","Ga0485157_metabat2_ours.077","Ga0485169_metabat1.187_sub","Ga0485169_metabat2_ours.242", "Ga0485160_metabat1.086"
+)
+
+new_column_names_list <- vector("list", length(genomes_list))
+names(new_column_names_list) <- genomes_list
+
+seq_num <- 1
+
+for (genome in genomes_list) {
+  phylum <- genome_to_phylum_map[genome]
+  
+  if (!is.null(phylum) && genome %in% colnames(t_count_df)) {
+    # Construct the new column name using the phylum and the current sequence number
+    new_column_name <- paste(phylum, seq_num, sep = "_")
+    
+    # Update the list with the new column name
+    new_column_names_list[genome] <- new_column_name
+    
+    # Rename the column in t_count_df
+    colnames(t_count_df)[colnames(t_count_df) == genome] <- new_column_name
+    
+    # Increment the sequence number for the next iteration
+    seq_num <- seq_num + 1
+  }
+}
+
+# Display the first few rows of the modified DataFrame to verify changes
+#print(head(t_count_df))
+#print(new_column_names_list)
+```
+
+## Figure 10
+```{r, fig.width=10, fig.height=8}
+library(CARlasso)
+set.seed(42)
+t_count_df$DO_mg_L <- ifelse(t_count_df$DO_mg_L < 0, 0, t_count_df$DO_mg_L)
+last_10_cols <- tail(names(t_count_df), 10)
+t_count_df <- t_count_df%>%
+  mutate(across(all_of(last_10_cols), ~scale(., center = min(.), scale = max(.) - min(.))[,1]))
+
+predictor_formula_part <- paste(new_column_names_list, collapse = " + ")
+# Construct the full formula by appending the response variables and predictors
+full_formula <- as.formula(paste(predictor_formula_part,"~", "depth + wtemp_in_celsius + specific_conductivity + chlorophyll_RFU + phycocyanin_RFU + Dissolved_organic_matter_RFU + Turbidity_RFU + DO_mg_L + PH "))
+ otu_res <- CARlasso(full_formula, data = t_count_df, adaptive = TRUE, link="log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+otu_res <- horseshoe(otu_res)
+plot(otu_res)
+phylum_levels_vector <- unlist(new_column_names_list)
+
+# Create the reference table with genomes_list and the flattened phylum_levels_vector
+reference_table <- data.frame(
+  Original_Genome = names(phylum_levels_vector),  
+  Phylum_Levels = phylum_levels_vector,
+  stringsAsFactors = FALSE,  # Ensuring character data does not convert to factors
+  row.names = NULL 
+)
+```
+
+## Table 10
+```{r}
+print(reference_table)
+
+```
+## Interpretation
+p__Bacteroidota_7 is not connecting to p__Actinobacteriota_2 and p__Bacteroidota_14. However, pior to permutation, the MAGs are more correlated with each other comparing with the environmental features, and this property still remains after permutation. 
+
+# Analysis 11
+This analysis focuses on the genome p__Verrucomicrobiota_9(Ga0485167_metabat2_ours.023), a significant entity within our microbial network due to its degree centrality. Highlighting its extensive connections within the network, we undertake a permutation analysis where p__Verrucomicrobiota_9 is swapped with 14 other randomly selected OTUs. This process aims to examine the impact of p__Verrucomicrobiota_9 on the network’s structure and functionality by observing how the network adapts to the reassignment of this highly connected genome.
+
+
+```{r}
+# Proceed with the rest of the script
+data <- read_csv("coverm_431_MAGS_metagenomes_reads_count.csv")
+data_t <- t(data)
+data_df <- as.data.frame(data_t)
+colnames(data_df) <- data_df[1, ]
+data_df <- data_df[-1, ]
+
+excluded_columns <- c("Ga0485158_metabat2_ours.098",
+"Ga0485159_metabat2_ours.079",
+"Ga0485171_metabat2_ours.127_sub",
+"Ga0485171_metabat2_ours.004",
+"Ga0485170_maxbin.090",
+"Ga0485171_metabat1.063",
+"Ga0485157_metabat2_ours.019",
+"Ga0485166_metabat2_ours.038",
+"Ga0485167_metabat2_ours.023",
+"Ga0485170_maxbin.059_sub",
+"Ga0485171_maxbin.130_sub",
+"Ga0485160_metabat2_ours.158_sub",
+"Ga0485161_maxbin.110",
+"Ga0485161_metabat1.096",
+"Ga0485161_metabat2_ours.167_sub")
+
+set.seed(42)
+available_columns <- setdiff(colnames(data_df), excluded_columns)
+random_column_names <- sample(available_columns, 14)
+#print(random_column_names)
+taxonomy_file_path <- 'MAG_taxonomy.tsv'
+taxonomy_df <- read_tsv(taxonomy_file_path)
+t_count_file_path <- 'metatransciptome_columnC.csv'
+t_count_df <- read_csv(t_count_file_path)
+# Create a mapping of genomes to phylum
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+
+genomes_list <- c(
+  "Ga0485159_maxbin.004_sub","Ga0485169_maxbin.153","Ga0485163_maxbin.002_sub","Ga0485159_metabat2_ours.130_sub","Ga0485164_metabat1.042_sub","Ga0485162_metabat2_ours.088" ,"Ga0485161_maxbin.064","Ga0485172_metabat2_ours.152","Ga0485167_metabat2_ours.023" ,"Ga0485161_metabat2_jgi.003_sub","Ga0485168_metabat2_ours.010","Ga0485157_metabat2_ours.068_sub","Ga0485169_maxbin.226_sub","Ga0485169_metabat2_ours.154","Ga0485160_maxbin.164_sub"   
+)
+
+new_column_names_list <- vector("list", length(genomes_list))
+names(new_column_names_list) <- genomes_list
+
+seq_num <- 1
+
+for (genome in genomes_list) {
+  phylum <- genome_to_phylum_map[genome]
+  
+  if (!is.null(phylum) && genome %in% colnames(t_count_df)) {
+    # Construct the new column name using the phylum and the current sequence number
+    new_column_name <- paste(phylum, seq_num, sep = "_")
+    
+    # Update the list with the new column name
+    new_column_names_list[genome] <- new_column_name
+    
+    # Rename the column in t_count_df
+    colnames(t_count_df)[colnames(t_count_df) == genome] <- new_column_name
+    
+    # Increment the sequence number for the next iteration
+    seq_num <- seq_num + 1
+  }
+}
+
+# Display the first few rows of the modified DataFrame to verify changes
+#print(head(t_count_df))
+#print(new_column_names_list)
+```
+## Figure 11
+```{r, fig.width=10, fig.height=8}
+library(CARlasso)
+set.seed(42)
+t_count_df$DO_mg_L <- ifelse(t_count_df$DO_mg_L < 0, 0, t_count_df$DO_mg_L)
+last_10_cols <- tail(names(t_count_df), 10)
+t_count_df <- t_count_df%>%
+  mutate(across(all_of(last_10_cols), ~scale(., center = min(.), scale = max(.) - min(.))[,1]))
+
+predictor_formula_part <- paste(new_column_names_list, collapse = " + ")
+# Construct the full formula by appending the response variables and predictors
+full_formula <- as.formula(paste(predictor_formula_part,"~", "depth + wtemp_in_celsius + specific_conductivity + chlorophyll_RFU + phycocyanin_RFU + Dissolved_organic_matter_RFU + Turbidity_RFU + DO_sat_perc + DO_mg_L + PH "))
+ otu_res <- CARlasso(full_formula, data = t_count_df, adaptive = TRUE, link="log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+  otu_res <- horseshoe(otu_res)
+ plot(otu_res)
+ phylum_levels_vector <- unlist(new_column_names_list)
+
+# Create the reference table with genomes_list and the flattened phylum_levels_vector
+reference_table <- data.frame(
+  Original_Genome = names(phylum_levels_vector),  
+  Phylum_Levels = phylum_levels_vector,
+  stringsAsFactors = FALSE,  # Ensuring character data does not convert to factors
+  row.names = NULL 
+)
+```
+
+## Table 11
+```{r}
+print(reference_table)
+
+```
+## Interpretation
+After permuting genome p__Verrucomicrobiota_9(Ga0485167_metabat2_ours.023) with 14 other random OTUs, we note a significant change: its previously strong connections with various environmental features(Dissolved organic matter and PH), observed in Analysis 6, have dissipated. This shift highlights the community-dependent nature of p__Bacteroidota_6’s role and underscores the dynamic adaptability of microbial networks to changes in their composition.
+
+
+# Analysis 12
+In this expanded analysis, we continue to focus on genome p__Verrucomicrobiota_9(Ga0485167_metabat2_ours.023), recognized for its substantial network connections. This iteration involves permuting p__Verrucomicrobiota_9 alongside 14 other randomly selected OTUs across 100 random network configurations. The objective is to quantitatively assess the significance of p__Verrucomicrobiota_9 within these varied network structures by measuring how often, within these 100 permutations, the genome emerges as important. Specifically, this OTU is deemed important if its edge value falls above the 90th percentile in the distribution of all edge values within the network. This systematic repetition provides a robust statistical framework to evaluate the resilience of p__Verrucomicrobiota_9’s network influence and its ecological role across multiple hypothetical community compositions. The outcome, reported as a percentage, will highlight the frequency at which p__Verrucomicrobiota_9 retains its central importance, offering deeper insights into its consistency as a key connector within the microbial community under diverse structural scenarios.
+
+```{r}
+library(readr)
+library(CARlasso)
+
+# Assuming initial data loading and transformation is done
+data <- read_csv("coverm_431_MAGS_metagenomes_reads_count.csv")
+data_t <- t(data)
+data_df <- as.data.frame(data_t)
+colnames(data_df) <- data_df[1, ]
+data_df <- data_df[-1, ]
+
+# Load the taxonomy and T-count files
+taxonomy_df <- read_tsv('MAG_taxonomy.tsv')
+t_count_df <- read_csv('metatransciptome_columnC.csv')
+# Create a mapping of genomes to phylum
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+
+excluded_columns <- c(
+  "Ga0485158_metabat2_ours.098",
+  "Ga0485159_metabat2_ours.079",
+  "Ga0485171_metabat2_ours.127_sub",
+  "Ga0485171_metabat2_ours.004",
+  "Ga0485170_maxbin.090",
+  "Ga0485171_metabat1.063",
+  "Ga0485157_metabat2_ours.019",
+  "Ga0485166_metabat2_ours.038",
+  "Ga0485167_metabat2_ours.023",
+  "Ga0485170_maxbin.059_sub",
+  "Ga0485171_maxbin.130_sub",
+  "Ga0485160_metabat2_ours.158_sub",
+  "Ga0485161_maxbin.110",
+  "Ga0485161_metabat1.096",
+  "Ga0485161_metabat2_ours.167_sub",
+  'Ga0485157_metabat2_jgi.016',
+ 'Ga0485163_metabat1.131',
+ 'Ga0485161_metabat2_jgi.016',
+ 'Ga0485161_metabat2_ours.188_sub',
+ 'Ga0485158_metabat1.076',
+ 'Ga0485167_maxbin.132',
+ 'Ga0485161_metabat2_jgi.003_sub',
+ 'Ga0485167_metabat2_ours.110_sub',
+ 'Ga0485169_metabat2_ours.047_sub',
+ 'Ga0485167_metabat2_ours.008',
+ 'Ga0485172_maxbin.051_sub',
+ 'Ga0485172_maxbin.047_sub',
+ 'Ga0485168_metabat2_ours.001_sub',
+ 'Ga0485163_metabat2_ours.198',
+ 'Ga0485170_metabat2_ours.102',
+ 'Ga0485169_maxbin.156',
+ 'Ga0485159_maxbin.127_sub',
+ 'Ga0485159_metabat2_jgi.002',
+ 'Ga0485160_metabat2_jgi.018',
+ 'Ga0485166_maxbin.099',
+ 'Ga0485163_metabat2_jgi.007',
+ 'Ga0485160_maxbin.046',
+ 'Ga0485163_maxbin.058_sub',
+ 'Ga0485164_metabat1.042_sub',
+ 'Ga0485163_maxbin.075_sub',
+ 'Ga0485162_metabat2_ours.050'
+)
+
+available_columns <- setdiff(colnames(data_df), excluded_columns)
+
+#set.seed(42) # For reproducibility
+
+# Function to update t_count_df based on sampled genomes
+update_t_count_df <- function(sampled_genomes, t_count_df, genome_to_phylum_map) {
+  updated_column_names <- vector("character", length(sampled_genomes))
+  
+  for (i in seq_along(sampled_genomes)) {
+    genome <- sampled_genomes[i]
+    phylum <- genome_to_phylum_map[genome]
+    if (!is.na(phylum)) {
+      new_column_name <- paste(phylum, i, sep = "_")
+      updated_column_names[i] <- new_column_name
+      if (genome %in% colnames(t_count_df)) {
+        colnames(t_count_df)[colnames(t_count_df) == genome] <- new_column_name
+      }
+    } else {
+      updated_column_names[i] <- genome # Use original name if no mapping found
+    }
+  }
+  
+  return(list(updated_df = t_count_df, selected_mags = updated_column_names))
+}
+
+results_90percent <- list()
+
+# Initialize counters
+count_values_abs_greater_than_10_in_col6 <- 0
+count_values_abs_greater_than_10_in_rows_8_and_9_col6 <- 0
+
+base_seed <- 42
+
+for (i in 1:100) {
+  set.seed(base_seed + i)
+  sampled_columns <- sample(available_columns, 8)
+  additional_columns <- sample(setdiff(available_columns, sampled_columns), 6)
+  sampled_genomes <- c(sampled_columns, "Ga0485167_metabat2_ours.023", additional_columns)
+  
+  list_results <- update_t_count_df(sampled_genomes, t_count_df, genome_to_phylum_map)
+  updated_t_count_df <- list_results$updated_df
+  new_column_names_list <- list_results$selected_mags
+  
+  changed_col <- updated_t_count_df
+  
+  # Replace negative DO_mg_L values with 0
+  changed_col$DO_mg_L <- ifelse(changed_col$DO_mg_L < 0, 0, changed_col$DO_mg_L)
+  
+  # Get the names of the last 10 columns
+  last_10_cols <- tail(names(changed_col), 10)
+  
+  # Apply min-max scaling to the last 10 columns
+  changed_col <- changed_col %>%
+    mutate(across(all_of(last_10_cols), ~ ( . - min(.)) / (max(.) - min(.)) ))
+  
+  # Construct the predictor formula part with the updated column names
+  predictor_formula_part <- paste(new_column_names_list, collapse = " + ")
+  
+  full_formula <- as.formula(paste(predictor_formula_part,"~", "depth + wtemp_in_celsius + specific_conductivity + chlorophyll_RFU + phycocyanin_RFU + Dissolved_organic_matter_RFU + Turbidity_RFU +DO_mg_L + PH "))
+  
+  # Using tryCatch to handle potential errors in CARlasso
+  otu_res <- tryCatch({
+    set.seed(42)
+    CARlasso(full_formula, data = changed_col, adaptive = TRUE, link = "log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+  }, error = function(e) {
+    # If an error occurs, return NULL and proceed to the next iteration
+    NULL
+  })
+  
+  # Check if CARlasso ran successfully
+  if (is.null(otu_res)) {
+    # Skip the rest of this iteration if CARlasso failed
+    next
+  }
+  
+  # Apply horseshoe transformation
+  #otu_res_hs <- horseshoe(otu_res)
+  
+  # Assuming otu_res$point_est$CAR$B is your matrix
+  data_matrix <- otu_res$point_est$CAR$B
+
+# Convert the matrix elements to their absolute values
+  data_matrix_abs <- abs(data_matrix)
+
+# Convert the absolute value matrix to a vector
+  data_vector <- as.vector(data_matrix_abs)
+
+# Calculate the 90th percentile of the absolute values
+  ninety_percentile <- quantile(data_vector, 0.9)
+  
+  # Check and count if any absolute value in column 9
+  if (any(abs(otu_res$point_est$CAR$B[, 9]) > ninety_percentile)) {
+    count_values_abs_greater_than_10_in_col6 <- count_values_abs_greater_than_10_in_col6 + 1
+  }
+
+  # Check and count if absolute values in rows 8 and 9 of column 9 
+if (abs(otu_res$point_est$CAR$B[6, 9]) > ninety_percentile & abs(otu_res$point_est$CAR$B[9, 9]) > ninety_percentile) {
+    count_values_abs_greater_than_10_in_rows_8_and_9_col6 <- count_values_abs_greater_than_10_in_rows_8_and_9_col6 + 1
+  }
+
+  # Store the horseshoe analysis results
+  results_90percent[[i]] <- ninety_percentile
+}
+# Calculate percentages
+percentage_col14 <- (count_values_abs_greater_than_10_in_col6 / sum(!sapply(results_90percent, is.null))) * 100
+percentage_rows_8_and_9_col6 <- (count_values_abs_greater_than_10_in_rows_8_and_9_col6/ sum(!sapply(results_90percent, is.null))) * 100
+```
+
+## Value of percenatge
+```{r}
+cat("Percentage of iterations where abs value is upon the 90 pecent quantile is:", percentage_rows_8_and_9_col6, "%\n")
+
+```
+
+
+# Analysis 13
+In this phase of our study, We aim to assess the significance of Genome p__Verrucomicrobiota_7(Ga0485165_metabat2_ours.012_sub) across 100 random microbial networks by permuting it with 14 other OTUs. Significance is determined if its connectivity exceeds the 90th percentile in edge values, quantifying its robustness as a key connector.
+
+```{r}
+library(readr)
+library(CARlasso)
+
+# Assuming initial data loading and transformation is done
+data <- read_csv("coverm_431_MAGS_metagenomes_reads_count.csv")
+data_t <- t(data)
+data_df <- as.data.frame(data_t)
+colnames(data_df) <- data_df[1, ]
+data_df <- data_df[-1, ]
+
+# Load the taxonomy and T-count files
+taxonomy_df <- read_tsv('MAG_taxonomy.tsv')
+t_count_df <- read_csv('metatransciptome_columnC.csv')
+# Create a mapping of genomes to phylum
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+
+excluded_columns <- c(
+  'Ga0485157_metabat1.059',
+    'Ga0485167_maxbin.109',
+    'Ga0485162_maxbin.089',
+    'Ga0485161_maxbin.110',
+    'Ga0485161_maxbin.075',
+    'Ga0485157_metabat1.036',
+    'Ga0485165_metabat2_ours.012_sub',
+    'Ga0485169_maxbin.201_sub',
+    'Ga0485172_maxbin.081_sub',
+    'Ga0485168_maxbin.153',
+    'Ga0485172_metabat2_ours.083',
+    'Ga0485162_maxbin.023',
+    'Ga0485160_maxbin.092',
+    'Ga0485158_metabat2_jgi.024',
+    'Ga0485162_metabat1.001',
+  'Ga0485157_metabat2_jgi.016',
+ 'Ga0485163_metabat1.131',
+ 'Ga0485161_metabat2_jgi.016',
+ 'Ga0485161_metabat2_ours.188_sub',
+ 'Ga0485158_metabat1.076',
+ 'Ga0485167_maxbin.132',
+ 'Ga0485161_metabat2_jgi.003_sub',
+ 'Ga0485167_metabat2_ours.110_sub',
+ 'Ga0485169_metabat2_ours.047_sub',
+ 'Ga0485167_metabat2_ours.008',
+ 'Ga0485172_maxbin.051_sub',
+ 'Ga0485172_maxbin.047_sub',
+ 'Ga0485168_metabat2_ours.001_sub',
+ 'Ga0485163_metabat2_ours.198',
+ 'Ga0485170_metabat2_ours.102',
+ 'Ga0485169_maxbin.156',
+ 'Ga0485159_maxbin.127_sub',
+ 'Ga0485159_metabat2_jgi.002',
+ 'Ga0485160_metabat2_jgi.018',
+ 'Ga0485166_maxbin.099',
+ 'Ga0485163_metabat2_jgi.007',
+ 'Ga0485160_maxbin.046',
+ 'Ga0485163_maxbin.058_sub',
+ 'Ga0485164_metabat1.042_sub',
+ 'Ga0485163_maxbin.075_sub',
+ 'Ga0485162_metabat2_ours.050'
+)
+
+available_columns <- setdiff(colnames(data_df), excluded_columns)
+
+#set.seed(42) # For reproducibility
+
+# Function to update t_count_df based on sampled genomes
+update_t_count_df <- function(sampled_genomes, t_count_df, genome_to_phylum_map) {
+  updated_column_names <- vector("character", length(sampled_genomes))
+  
+  for (i in seq_along(sampled_genomes)) {
+    genome <- sampled_genomes[i]
+    phylum <- genome_to_phylum_map[genome]
+    if (!is.na(phylum)) {
+      new_column_name <- paste(phylum, i, sep = "_")
+      updated_column_names[i] <- new_column_name
+      if (genome %in% colnames(t_count_df)) {
+        colnames(t_count_df)[colnames(t_count_df) == genome] <- new_column_name
+      }
+    } else {
+      updated_column_names[i] <- genome # Use original name if no mapping found
+    }
+  }
+  
+  return(list(updated_df = t_count_df, selected_mags = updated_column_names))
+}
+
+results_90percent <- list()
+
+# Initialize counters
+count_values_abs_greater_than_10_in_col4 <- 0
+count_values_abs_greater_than_10_in_rows_8_and_9_col4 <- 0
+
+base_seed <- 42
+
+for (i in 1:100) {
+  set.seed(base_seed + i)
+  sampled_columns <- sample(available_columns, 6)
+  additional_columns <- sample(setdiff(available_columns, sampled_columns), 8)
+  sampled_genomes <- c(sampled_columns, "Ga0485165_metabat2_ours.012_sub", additional_columns)
+  
+  
+  list_results <- update_t_count_df(sampled_genomes, t_count_df, genome_to_phylum_map)
+  updated_t_count_df <- list_results$updated_df
+  new_column_names_list <- list_results$selected_mags
+  
+  changed_col <- updated_t_count_df
+  
+  # Replace negative DO_mg_L values with 0
+  changed_col$DO_mg_L <- ifelse(changed_col$DO_mg_L < 0, 0, changed_col$DO_mg_L)
+  
+  # Get the names of the last 10 columns
+  last_10_cols <- tail(names(changed_col), 10)
+  
+  # Apply min-max scaling to the last 10 columns
+  changed_col <- changed_col %>%
+    mutate(across(all_of(last_10_cols), ~ ( . - min(.)) / (max(.) - min(.)) ))
+  
+  # Construct the predictor formula part with the updated column names
+  predictor_formula_part <- paste(new_column_names_list, collapse = " + ")
+  
+  full_formula <- as.formula(paste(predictor_formula_part,"~", "depth + wtemp_in_celsius + specific_conductivity + chlorophyll_RFU + phycocyanin_RFU + Dissolved_organic_matter_RFU + Turbidity_RFU +DO_mg_L + PH "))
+  
+  # Using tryCatch to handle potential errors in CARlasso
+  otu_res <- tryCatch({
+    set.seed(42)
+    CARlasso(full_formula, data = changed_col, adaptive = TRUE, link = "log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+  }, error = function(e) {
+    # If an error occurs, return NULL and proceed to the next iteration
+    NULL
+  })
+  
+  # Check if CARlasso ran successfully
+  if (is.null(otu_res)) {
+    # Skip the rest of this iteration if CARlasso failed
+    next
+  }
+  
+  # Apply horseshoe transformation
+  #otu_res_hs <- horseshoe(otu_res)
+  
+  # Assuming otu_res$point_est$CAR$B is your matrix
+  data_matrix <- otu_res$point_est$CAR$B
+
+# Convert the matrix elements to their absolute values
+  data_matrix_abs <- abs(data_matrix)
+
+# Convert the absolute value matrix to a vector
+  data_vector <- as.vector(data_matrix_abs)
+
+# Calculate the 90th percentile of the absolute values
+  ninety_percentile_15 <- quantile(data_vector, 0.9)
+  
+  # Check and count if any absolute value in column 15
+  if (any(abs(otu_res$point_est$CAR$B[, 7]) > ninety_percentile_15)) {
+    count_values_abs_greater_than_10_in_col4 <- count_values_abs_greater_than_10_in_col4 + 1
+  }
+
+  # Check and count if absolute values in rows 5 and 6 of column 15
+  
+  if (abs(otu_res$point_est$CAR$B[6, 7]) > ninety_percentile & abs(otu_res$point_est$CAR$B[9, 7]) > ninety_percentile){
+    count_values_abs_greater_than_10_in_rows_8_and_9_col4 <- count_values_abs_greater_than_10_in_rows_8_and_9_col4 + 1
+  }
+
+  # Store the horseshoe analysis results
+  results_90percent[[i]] <- ninety_percentile_15
+}
+percentage_col4 <- (count_values_abs_greater_than_10_in_col4 / sum(!sapply(results_90percent, is.null))) * 100
+percentage_rows_8_and_9_col4 <- (count_values_abs_greater_than_10_in_rows_8_and_9_col4 / sum(!sapply(results_90percent, is.null))) * 100
+
+# Print results
+#cat("Percentage of iterations where any abs value > 10 in col 14:", percentage_col14, "%\n")
+#cat("Percentage of iterations where abs value is upon the 90 pecent quantile is:", percentage_rows_8_and_9_col4, "%\n")
+```
+
+## Value of percenatge
+```{r}
+cat("Percentage of iterations where abs value is upon the 90 pecent quantile is:", percentage_rows_8_and_9_col4, "%\n")
+
+```
+
+## Interpretation
+
+# Analysis 14
+
+In this phase of our study, We aim to assess the significance of Genome p__Bacteroidota_9(Ga0485171_metabat1.063) across 100 random microbial networks by permuting it with 14 other OTUs. Significance is determined if its connectivity exceeds the 90th percentile in edge values, quantifying its robustness as a key connector.(based on analysis 5)
+
+```{r}
+library(readr)
+library(CARlasso)
+
+# Assuming initial data loading and transformation is done
+data <- read_csv("coverm_431_MAGS_metagenomes_reads_count.csv")
+data_t <- t(data)
+data_df <- as.data.frame(data_t)
+colnames(data_df) <- data_df[1, ]
+data_df <- data_df[-1, ]
+
+# Load the taxonomy and T-count files
+taxonomy_df <- read_tsv('MAG_taxonomy.tsv')
+t_count_df <- read_csv('metatransciptome_columnC.csv')
+# Create a mapping of genomes to phylum
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+
+excluded_columns <- c(
+  "Ga0485158_metabat2_ours.098",
+"Ga0485166_metabat2_ours.038",
+"Ga0485167_metabat2_ours.023",
+"Ga0485170_maxbin.090",
+"Ga0485161_metabat2_ours.167_sub",
+"Ga0485171_maxbin.130_sub",
+"Ga0485161_maxbin.110",
+"Ga0485164_metabat2_ours.069_sub",
+"Ga0485171_metabat1.063",
+"Ga0485159_metabat2_ours.079",
+"Ga0485171_metabat2_ours.127_sub",
+"Ga0485159_metabat2_ours.155_sub",
+"Ga0485158_metabat1.076",
+"Ga0485171_metabat1.030",
+"Ga0485168_metabat2_ours.135_sub",
+  'Ga0485157_metabat2_jgi.016',
+ 'Ga0485163_metabat1.131',
+ 'Ga0485161_metabat2_jgi.016',
+ 'Ga0485161_metabat2_ours.188_sub',
+ 'Ga0485158_metabat1.076',
+ 'Ga0485167_maxbin.132',
+ 'Ga0485161_metabat2_jgi.003_sub',
+ 'Ga0485167_metabat2_ours.110_sub',
+ 'Ga0485169_metabat2_ours.047_sub',
+ 'Ga0485167_metabat2_ours.008',
+ 'Ga0485172_maxbin.051_sub',
+ 'Ga0485172_maxbin.047_sub',
+ 'Ga0485168_metabat2_ours.001_sub',
+ 'Ga0485163_metabat2_ours.198',
+ 'Ga0485170_metabat2_ours.102',
+ 'Ga0485169_maxbin.156',
+ 'Ga0485159_maxbin.127_sub',
+ 'Ga0485159_metabat2_jgi.002',
+ 'Ga0485160_metabat2_jgi.018',
+ 'Ga0485166_maxbin.099',
+ 'Ga0485163_metabat2_jgi.007',
+ 'Ga0485160_maxbin.046',
+ 'Ga0485163_maxbin.058_sub',
+ 'Ga0485164_metabat1.042_sub',
+ 'Ga0485163_maxbin.075_sub',
+ 'Ga0485162_metabat2_ours.050'
+)
+
+available_columns <- setdiff(colnames(data_df), excluded_columns)
+
+#set.seed(42) # For reproducibility
+
+# Function to update t_count_df based on sampled genomes
+update_t_count_df <- function(sampled_genomes, t_count_df, genome_to_phylum_map) {
+  updated_column_names <- vector("character", length(sampled_genomes))
+  
+  for (i in seq_along(sampled_genomes)) {
+    genome <- sampled_genomes[i]
+    phylum <- genome_to_phylum_map[genome]
+    if (!is.na(phylum)) {
+      new_column_name <- paste(phylum, i, sep = "_")
+      updated_column_names[i] <- new_column_name
+      if (genome %in% colnames(t_count_df)) {
+        colnames(t_count_df)[colnames(t_count_df) == genome] <- new_column_name
+      }
+    } else {
+      updated_column_names[i] <- genome # Use original name if no mapping found
+    }
+  }
+  
+  return(list(updated_df = t_count_df, selected_mags = updated_column_names))
+}
+
+results_90percent <- list()
+
+# Initialize counters
+count_values_abs_greater_than_10_in_col4 <- 0
+count_values_abs_greater_than_10_in_rows_8_and_9_col4 <- 0
+
+base_seed <- 42
+
+for (i in 1:100) {
+  set.seed(base_seed + i)
+  sampled_columns <- sample(available_columns, 8)
+  additional_columns <- sample(setdiff(available_columns, sampled_columns), 6)
+  sampled_genomes <- c(sampled_columns, "Ga0485171_metabat1.063", additional_columns)
+  
+  
+  list_results <- update_t_count_df(sampled_genomes, t_count_df, genome_to_phylum_map)
+  updated_t_count_df <- list_results$updated_df
+  new_column_names_list <- list_results$selected_mags
+  
+  changed_col <- updated_t_count_df
+  
+  # Replace negative DO_mg_L values with 0
+  changed_col$DO_mg_L <- ifelse(changed_col$DO_mg_L < 0, 0, changed_col$DO_mg_L)
+  
+  # Get the names of the last 10 columns
+  last_10_cols <- tail(names(changed_col), 10)
+  
+  # Apply min-max scaling to the last 10 columns
+  changed_col <- changed_col %>%
+    mutate(across(all_of(last_10_cols), ~ ( . - min(.)) / (max(.) - min(.)) ))
+  
+  # Construct the predictor formula part with the updated column names
+  predictor_formula_part <- paste(new_column_names_list, collapse = " + ")
+  
+  full_formula <- as.formula(paste(predictor_formula_part,"~", "depth + wtemp_in_celsius + specific_conductivity + chlorophyll_RFU + phycocyanin_RFU + Dissolved_organic_matter_RFU + Turbidity_RFU + DO_sat_perc + DO_mg_L + PH "))
+  
+  # Using tryCatch to handle potential errors in CARlasso
+  otu_res <- tryCatch({
+    set.seed(42)
+    CARlasso(full_formula, data = changed_col, adaptive = TRUE, link = "log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+  }, error = function(e) {
+    # If an error occurs, return NULL and proceed to the next iteration
+    NULL
+  })
+  
+  # Check if CARlasso ran successfully
+  if (is.null(otu_res)) {
+    # Skip the rest of this iteration if CARlasso failed
+    next
+  }
+  
+  # Apply horseshoe transformation
+  #otu_res_hs <- horseshoe(otu_res)
+  
+  # Assuming otu_res$point_est$CAR$B is your matrix
+   data_matrix <- otu_res$point_est$CAR$B
+
+# Convert the matrix elements to their absolute values
+  data_matrix_abs <- abs(data_matrix)
+
+# Convert the absolute value matrix to a vector
+  data_vector <- as.vector(data_matrix_abs)
+
+# Calculate the 90th percentile of the absolute values
+  ninety_percentile_15 <- quantile(data_vector, 0.9)
+  
+  # Check and count if any absolute value in column 15
+  if (any(abs(otu_res$point_est$CAR$B[, 9]) > ninety_percentile_15)) {
+    count_values_abs_greater_than_10_in_col4 <- count_values_abs_greater_than_10_in_col4 + 1
+  }
+
+  # Check and count if absolute values in rows 5 and 6 of column 15
+  
+  if (abs(otu_res$point_est$CAR$B[3, 9]) > ninety_percentile & abs(otu_res$point_est$CAR$B[6, 9]) > ninety_percentile){
+    count_values_abs_greater_than_10_in_rows_8_and_9_col4 <- count_values_abs_greater_than_10_in_rows_8_and_9_col4 + 1
+  }
+
+  # Store the horseshoe analysis results
+  results_90percent[[i]] <- ninety_percentile_15
+}
+percentage_col4 <- (count_values_abs_greater_than_10_in_col4 / sum(!sapply(results_90percent, is.null))) * 100
+percentage_rows_8_and_9_col4 <- (count_values_abs_greater_than_10_in_rows_8_and_9_col4 / sum(!sapply(results_90percent, is.null))) * 100
+
+# Print results
+#cat("Percentage of iterations where any abs value > 10 in col 14:", percentage_col14, "%\n")
+#cat("Percentage of iterations where abs value is upon the 90 pecent quantile is:", percentage_rows_8_and_9_col4, "%\n")
+```
+
+## Value of percenatge
+```{r}
+cat("Percentage of iterations where abs value is upon the 90 pecent quantile is:", percentage_rows_8_and_9_col4, "%\n")
+
+```
+
+
+
+
