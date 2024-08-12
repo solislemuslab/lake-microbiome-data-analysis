@@ -64,7 +64,7 @@ For running these code, automatically create the following folder as input of al
 
 
 
-For running **Metagenomic_Network.Rmd**, **Metatransciptomic_Network.Rmd**, **Car-figures.R**, the following folder are required: `Metagenomic_Networkfile`, `Metagenomic_Networkfile`.
+For running **Metagenomic_Network.Rmd**, **Metatransciptomic_Network.Rmd**, **Car-figures.R**, the following folders are required: `Metagenomic_Networkfile`, `Metagenomic_Networkfile`.
 
 
 
