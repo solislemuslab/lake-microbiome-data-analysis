@@ -17,7 +17,7 @@ taxonomy_df = read.csv(taxonomy_file_path, sep='\t')
 genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
 
 set.seed(42)
-changed_col<-read.csv("Network files/tax_Degree.csv")
+changed_col<-read.csv("Metagenomic_Networkfile/tax_Degree.csv")
 changed_col$DO_mg_L <- ifelse(changed_col$DO_mg_L < 0, 0, changed_col$DO_mg_L)
 last_10_cols <- tail(names(changed_col), 10)
 changed_col <- changed_col%>%
@@ -92,7 +92,7 @@ dev.off()
 
 #Figure 11
 library(readr)
-data <- read_csv("Fw_ lake mendota data/coverm_431_MAGS_metagenomes_reads_count.csv")
+data <- read_csv("coverm_431_MAGS_metagenomes_reads_count.csv")
 data_t <- t(data)
 data_df <- as.data.frame(data_t)
 colnames(data_df) <- data_df[1, ]
@@ -118,9 +118,9 @@ set.seed(42)
 available_columns <- setdiff(colnames(data_df), excluded_columns)
 random_column_names <- sample(available_columns, 14)
 #print(random_column_names)
-taxonomy_file_path <- 'Fw_ lake mendota data/MAG_taxonomy.tsv'
+taxonomy_file_path <- 'MAG_taxonomy.tsv'
 taxonomy_df <- read_tsv(taxonomy_file_path)
-t_count_file_path <- 't_count_columnC.csv'
+t_count_file_path <- 'Metagenomic_columnC.csv'
 t_count_df <- read_csv(t_count_file_path)
 
 # Create a mapping of genomes to phylum
