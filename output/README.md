@@ -1,6 +1,6 @@
 # output
 
-This directory contains all the figures presented in our research paper. These figures are the direct output from running the scripts located in the `code` folder. They illustrate key findings from the analysis of lake microbiome data and CARlasso model evaluations.
+This directory contains all the figures presented in our research paper. These figures are the direct output from running the `lake-microbiome-figures.py` file located in the `code` folder. They illustrate key findings from the analysis of lake microbiome data and CARlasso model evaluations.
 
 ## Figure Descriptions
 
