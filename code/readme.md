@@ -20,8 +20,8 @@ Ensure you have the following software installed before running the scripts:
 
 - **Python**: Version 3.8 or higher recommended.
 - **R**: Version 4.0 or higher recommended.
-- CARlasso: Conditional Auto-Regressive LASSO in R: [CARlasso](https://yunyishen.github.io/CAR-LASSO/) (please follow the installation process)
-- SpiecEasi: An R package for microbial network inference: [SpiecEasi](https://github.com/zdk123/SpiecEasi.git) (please follow the installation process)
+- **CARlasso**: Conditional Auto-Regressive LASSO in R: [CARlasso](https://yunyishen.github.io/CAR-LASSO/) (please follow the installation process)
+- **SpiecEasi**: An R package for microbial network inference: [SpiecEasi](https://github.com/zdk123/SpiecEasi.git) (please follow the installation process)
 
 ## Running the Scripts
 
