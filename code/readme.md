@@ -7,6 +7,7 @@ This document provides explanations of the Python and R scripts in this reposito
 | Script File                          | Description                                                                                                           |
 |--------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | **top10_15.py**       | Generates a directory containing files using the fraction feature selection methods for the MAGs. |
+|     | Generates files using SpiecEasi Algorithm for the feature selection of the MAGs. |
 | **Metagenomic_Networkfile.py**       | Generates a directory containing files using the SPIEC-EASI algorithm as well as fraction method for metagenomic data analysis. Serves as input for `Metagenomic_Network.Rmd`. |
 | **Metatransciptome_Networkfile.py**  | Similar function for metatranscriptomic data, generating input files for `Metatransciptomic_Network.Rmd`.             |
 | **lake-microbiome-figures.py**       | Analyzes microbial abundance in varied environmental conditions and generates visualizations.                         |
