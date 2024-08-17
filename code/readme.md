@@ -7,7 +7,7 @@ This document provides explanations of the Python and R scripts in this reposito
 | Script File                          | Description                                                                                                           |
 |--------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | **top10_15.py**       | Generates a directory containing files using the fraction feature selection methods for the MAGs. |
-|     | Generates files using SpiecEasi Algorithm for the feature selection of the MAGs. |
+| **SE_features.R**    | Generates files using SpiecEasi Algorithm for the feature selection of the MAGs. |
 | **Metagenomic_Networkfile.py**       | Generates a directory containing files using the SPIEC-EASI algorithm as well as fraction method for metagenomic data analysis. Serves as input for `Metagenomic_Network.Rmd`. |
 | **Metatransciptome_Networkfile.py**  | Similar function for metatranscriptomic data, generating input files for `Metatransciptomic_Network.Rmd`.             |
 | **lake-microbiome-figures.py**       | Analyzes microbial abundance in varied environmental conditions and generates visualizations.                         |
@@ -35,6 +35,7 @@ Run the Python and R scripts by executing these commands in your terminal:
 ```bash
 # Generate selected features(MAGs) by using different methodologies
 python3 top10_15.py
+Rscript SE_features.R
 
 # Generate network files
 python3 Metagenomic_Networkfile.py
@@ -54,17 +55,15 @@ For running these code, automatically create the following folder as input of al
 | Folder Name                     | File Name                   | Description                                                                                      |
 |---------------------------------|-----------------------------|--------------------------------------------------------------------------------------------------|
 | **feature_selection**     | `top_10_genomes.csv`                | Using the fraction method to select top 10 OTUs based on consistent presence over time and depth from `Metagenomic_columnC.csv`.              |
-|      | `top_10_genomes.csv`                | Using the fraction method to select top 15 OTUs based on consistent presence over time and depth from `Metagenomic_columnC.csv`.                         |
+|      | `top_15_genomes.csv`                | Using the fraction method to select top 15 OTUs based on consistent presence over time and depth from `Metagenomic_columnC.csv`.                         |
 |      | `B.csv`       | Using SpiecEasi Algorithm to select the top 15 nodes based on betweenness centrality metrics from `Metagenomic_columnC.csv`.|
 |      | `C.csv`         | Using SpiecEasi Algorithm to select the top 15 nodes based on closeness centrality metrics from `Metagenomic_columnC.csv`.    |
-|      | `D-B-C-E-P.csv`         | Selected the top 20% of nodes for "degree", "betweenness", "closeness", "eigenvector centrality", and "PageRank" metrics, and calculated their intersection. |
 |     | `D.csv`            | Using SpiecEasi Algorithm to select the top 15 nodes based on degree centrality metrics from `Metagenomic_columnC.csv`.    |
 |      | `P.csv`         | Using SpiecEasi Algorithm to select the top 15 nodes based on Page Rank centrality metrics from `Metagenomic_columnC.csv`. |
 | **Metagenomic_Networkfile**     | `tax_10.csv`                | Features the top 10 OTUs selected using the fraction method based on consistent presence over time and depth from `Metagenomic_columnC.csv`, with names updated to their phylum level.              |
 |      | `tax_15.csv`                | Features the top 15 OTUs selected using the fraction method based on consistent presence over time and depth from `Metagenomic_columnC.csv`, with names updated to their phylum level.                         |
 |      | `tax_Betweenness.csv`       | Reflects betweenness centrality metrics from `Metagenomic_columnC.csv`, with selected nodes renamed to their phylum level.|
 |      | `tax_Closeness.csv`         | Contains closeness centrality metrics from `Metagenomic_columnC.csv`, with selected nodes renamed to their phylum level.     |
-|      | `tax_D-B-C-E-P.csv`         | Contains an intersection of "degree", "betweenness", "closeness", "eigenvector centrality", and "PageRank" metrics from `Metagenomic_columnC.csv`, but with node names adjusted to their phylum level. |
 |     | `tax_Degree.csv`            | Offers degree centrality metrics from `Metagenomic_columnC.csv` with selected nodes renamed to their phylum level.     |
 |      | `tax_Page_Rank.csv`         | Offers Page Rank centrality metrics from `Metagenomic_columnC.csv` with selected nodes renamed to their phylum level. |
 | **Metatransciptome_Networkfile**| `tax_10.csv`                | Features the top 10 OTUs selected using the fraction method based on consistent presence over time and depth from `metatranscriptome_columnC.csv`, with names updated to their phylum level.       |
@@ -74,7 +73,6 @@ For running these code, automatically create the following folder as input of al
 || `tax_Degree.csv`            | Offers degree centrality metrics from `metatranscriptome_columnC.csv` with selected nodes renamed to their phylum level. |
 | | `tax_Page_Rank.csv`         | Offers Page Rank centrality metrics from `metatranscriptome_columnC.csv` with selected nodes renamed to their phylum level. |
 | **OutputFigures**               | -                           | Contains all figures generated by the scripts, showcasing visual representations of data analyses conducted in the research paper. For more detailed files generated inside the OutputFigures folder, please refer to the `output` folder.|
-
 
 
 
