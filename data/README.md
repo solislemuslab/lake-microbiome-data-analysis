@@ -1,6 +1,8 @@
 # data
 This directory contains all the raw data files necessary for our analyses, focusing on microbial communities and their environmental interactions.
 
+Our data is available on Zenodo: [10.5281/zenodo.14046929](https://doi.org/10.5281/zenodo.14046929)
+
 ## Directory Contents
 
 ### Folder
@@ -51,4 +53,7 @@ This subsection details the CSV and Excel files located within the **2020 Profil
 ## Note
 
 For further information on methodologies or analytical techniques used with these data, or for any other inquiries, please refer to the project documentation or contact the project contributors.
+
+## Data citations:
+Tran, P. (2024). Metagenome-Assembled Genomes Abundance & Activity Tables. Environmental Parameters Associated with the dataset. (1.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.14046929
 
