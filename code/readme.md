@@ -2,6 +2,8 @@
 
 This document provides explanations of the Python and R scripts in this repository, along with a tutorial on how to reproduce the experiment results. The primary focus of these scripts is on processing lake microbiome data and visualizing the results.
 
+Our data is available on Zenodo: [10.5281/zenodo.14046929](https://doi.org/10.5281/zenodo.14046929)
+
 ## Scripts Overview
 
 | Script File                          | Description                                                                                                           |
