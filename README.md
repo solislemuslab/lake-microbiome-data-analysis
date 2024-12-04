@@ -13,7 +13,6 @@ Issues and questions are encouraged through the [GitHub issue tracker](https://g
 ## Citation
 
 We kindly ask that you cite the following paper:
-Yang Q, Aghdam R, Tran PQ, Anantharaman K, Solis-Lemus C. Unraveling Keystone Taxa: Interactions Within Microbial Networks and Environmental Dynamics in Lake Mendota. bioRxiv. 2024:2024-11.
 ```bibtex
 @article{Yang2024,
   doi = {/10.1101/2024.11.11.623027}, 
