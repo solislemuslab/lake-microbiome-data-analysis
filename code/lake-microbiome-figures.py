@@ -71,27 +71,22 @@ plt.savefig(output_folder / 'Boxplot_distribution.png', dpi=300)
 
 
 #Figure 3
-#for each month, count the total
-july=data_sorted.iloc[0:3].sum()
-aug=data_sorted.iloc[3:9].sum()
-sep=data_sorted.iloc[9:11].sum()
-october=data_sorted.iloc[11:16].sum()
-
-# fig, ax = plt.subplots()
-fig, ax = plt.subplots(figsize=(10,5))
+july = data_sorted.iloc[0:3].mean(axis=0)
+aug = data_sorted.iloc[3:9].mean(axis=0)
+sep = data_sorted.iloc[9:11].mean(axis=0)
+october = data_sorted.iloc[11:16].mean(axis=0)
 
 
-ax.boxplot(july)
-ax.boxplot(aug,positions=[2], widths=0.6)
-ax.boxplot(sep,positions=[3], widths=0.6)
-ax.boxplot(october,positions=[4], widths=0.6)
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.boxplot([july, aug, sep, october], widths=0.6)
 
-labels = ['July(3 samples)','August(6 samples)','September(2 samples)','October(5 samples)']
-ax.set_xticklabels(labels, fontsize=16)  # Increase font size for x-axis labels
+labels = ['July (3 samples)', 'August (6 samples)', 'September (2 samples)', 'October (5 samples)']
+ax.set_xticklabels(labels, fontsize=16)
+ax.set_ylabel('Mean Relative Abundance of MAGs', fontsize=16)
+plt.tick_params(axis='both', which='major', labelsize=13)
+plt.tight_layout()
+plt.savefig(output_folder / 'month_abundance.png', dpi=300)
 
-ax.set_ylabel('The relative abundance of genomes', fontsize=16)
-plt.tick_params(axis='both', which='major', labelsize=13)  # Increase font size for tick labels
-plt.savefig(output_folder /'month_abundance.png', dpi=300)
 #august has more outliers than all the other months
 
 #sorted genome each month by descedning order
@@ -220,25 +215,27 @@ plt.savefig(output_folder / 'Binary Map of genome vs. months.svg', format='svg',
 
 #Figure 5
 #organized them based on depth 5,10,15,23.5
-five=data_sorted.loc[['2020-07-24_5m','2020-10-19_5m']].sum()
-ten=data_sorted.loc[['2020-08-25_10m','2020-08-05_10m']].sum()
-fifteen=data_sorted.loc[['2020-07-24_15m','2020-08-05_15m','2020-08-25_15m','2020-09-11_15m','2020-10-08_15m','2020-10-19_15m']].sum()
-twenth2_5=data_sorted.loc[['2020-07-24_23.5m','2020-08-05_23.5m','2020-08-25_23.5m','2020-09-11_23.5m','2020-10-08_23.5m','2020-10-19_23.5m']].sum()
+# Calculate mean relative abundance of each MAG across samples at each depth
+five = data_sorted.loc[['2020-07-24_5m', '2020-10-19_5m']].mean(axis=0)
+ten = data_sorted.loc[['2020-08-25_10m', '2020-08-05_10m']].mean(axis=0)
+fifteen = data_sorted.loc[['2020-07-24_15m', '2020-08-05_15m', '2020-08-25_15m',
+                           '2020-09-11_15m', '2020-10-08_15m', '2020-10-19_15m']].mean(axis=0)
+twenth2_5 = data_sorted.loc[['2020-07-24_23.5m', '2020-08-05_23.5m', '2020-08-25_23.5m',
+                             '2020-09-11_23.5m', '2020-10-08_23.5m', '2020-10-19_23.5m']].mean(axis=0)
 
-#fig, ax = plt.subplots()
-fig, ax = plt.subplots(figsize=(10,5))
-ax.boxplot(five)
-ax.boxplot(ten,positions=[2], widths=0.6)
-ax.boxplot(fifteen,positions=[3], widths=0.6)
-ax.boxplot(twenth2_5,positions=[4], widths=0.6)
+# Create boxplot
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.boxplot([five, ten, fifteen, twenth2_5], widths=0.6)
 
-labels = ['5m(2 samples)','10m(2 samples)','15m(6 samples)','23.5m(6 samples)']
-ax.set_xticklabels(labels, fontsize=16)  # Increase font size for x-axis labels
+labels = ['5m (2 samples)', '10m (2 samples)', '15m (6 samples)', '23.5m (6 samples)']
+ax.set_xticklabels(labels, fontsize=16)
 
-ax.set_ylabel('The relative abundance of genomes', fontsize=16)
+ax.set_ylabel('Mean Relative Abundance of MAGs', fontsize=16)
 plt.tick_params(axis='both', which='major', labelsize=13)
 
-plt.savefig(output_folder /'depth_abundance.png', dpi=300)
+plt.tight_layout()
+plt.savefig(output_folder / 'depth_abundance.png', dpi=300)
+
 
 sorted_five = five.sort_values(ascending=False)
 sorted_ten = ten.sort_values(ascending=False)
