@@ -12,32 +12,33 @@ library(dplyr)
 library(CARlasso)
 
 #Figure 10
-taxonomy_file_path = 'MAG_taxonomy.tsv'
+taxonomy_file_path = 'Fw_ lake mendota data/MAG_taxonomy.tsv'
 taxonomy_df = read.csv(taxonomy_file_path, sep='\t')
 genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
 
 set.seed(42)
-changed_col<-read.csv("Metagenomic_Networkfile/tax_Degree.csv")
+changed_col<-read.csv("Network files/tax_Degree.csv")
+colnames(changed_col) <- sub("^p__", "", colnames(changed_col))
 changed_col$DO_mg_L <- ifelse(changed_col$DO_mg_L < 0, 0, changed_col$DO_mg_L)
 last_10_cols <- tail(names(changed_col), 10)
 changed_col <- changed_col%>%
   mutate(across(all_of(last_10_cols), ~scale(., center = min(.), scale = max(.) - min(.))[,1]))
 
-otu_res <- CARlasso(p__Krumholzibacteriota_1
-                    +p__Bacteroidota_2
-                    +p__Bacteroidota_3
-                    +p__Proteobacteria_4
-                    +p__Planctomycetota_5
-                    +p__Bacteroidota_6
-                    +p__Chloroflexota_7
-                    +p__Bacteroidota_8
-                    +p__Verrucomicrobiota_9
-                    +p__Actinobacteriota_10
-                    +p__Planctomycetota_11
-                    +p__Chloroflexota_12
-                    +p__Proteobacteria_13
-                    +p__Firmicutes_A_14
-                    +p__Verrucomicrobiota_15~depth+wtemp_in_celsius+specific_conductivity+chlorophyll_RFU+phycocyanin_RFU+Dissolved_organic_matter_RFU+Turbidity_RFU+DO_mg_L+PH, data = changed_col, adaptive = TRUE, link="log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
+otu_res <- CARlasso(Krumholzibacteriota_1
+                    +Bacteroidota_2
+                    +Bacteroidota_3
+                    +Proteobacteria_4
+                    +Planctomycetota_5
+                    +Bacteroidota_6
+                    +Chloroflexota_7
+                    +Bacteroidota_8
+                    +Verrucomicrobiota_9
+                    +Actinobacteriota_10
+                    +Planctomycetota_11
+                    +Chloroflexota_12
+                    +Proteobacteria_13
+                    +Firmicutes_A_14
+                    +Verrucomicrobiota_15~depth+wtemp_in_celsius+specific_conductivity+chlorophyll_RFU+phycocyanin_RFU+Dissolved_organic_matter_RFU+Turbidity_RFU+DO_mg_L+PH, data = changed_col, adaptive = TRUE, link="log", n_iter = 5000, n_burn_in = 1000, thin_by = 10)
 otu_res <- horseshoe(otu_res)
 
 
@@ -61,7 +62,7 @@ genomes_list <- c(
 )
 
 
-phylum_names <- sapply(genomes_list, function(genome) genome_to_phylum_map[[genome]])
+phylum_names <- sapply(genomes_list, function(genome) sub("^p__", "", genome_to_phylum_map[[genome]]))
 new_column_names <- paste(phylum_names, seq_along(genomes_list), sep="_")
 
 reference_table <- data.frame(
@@ -92,7 +93,7 @@ dev.off()
 
 #Figure 11
 library(readr)
-data <- read_csv("coverm_431_MAGS_metagenomes_reads_count.csv")
+data <- read_csv("Fw_ lake mendota data/coverm_431_MAGS_metagenomes_reads_count.csv")
 data_t <- t(data)
 data_df <- as.data.frame(data_t)
 colnames(data_df) <- data_df[1, ]
@@ -118,9 +119,9 @@ set.seed(42)
 available_columns <- setdiff(colnames(data_df), excluded_columns)
 random_column_names <- sample(available_columns, 14)
 #print(random_column_names)
-taxonomy_file_path <- 'MAG_taxonomy.tsv'
+taxonomy_file_path <- 'Fw_ lake mendota data/MAG_taxonomy.tsv'
 taxonomy_df <- read_tsv(taxonomy_file_path)
-t_count_file_path <- 'Metagenomic_columnC.csv'
+t_count_file_path <- 't_count_columnC.csv'
 t_count_df <- read_csv(t_count_file_path)
 
 # Create a mapping of genomes to phylum
@@ -136,7 +137,7 @@ names(new_column_names_list) <- genomes_list
 seq_num <- 1
 
 for (genome in genomes_list) {
-  phylum <- genome_to_phylum_map[genome]
+  phylum <- sub("^p__", "", genome_to_phylum_map[genome])
   
   if (!is.null(phylum) && genome %in% colnames(t_count_df)) {
     # Construct the new column name using the phylum and the current sequence number
@@ -185,3 +186,86 @@ plot(otu_res)
 
 # Close the device to finish writing to the file
 dev.off()
+
+## figure for Metatranscriptome in the supplementary file
+
+
+set.seed(42)
+
+# Load data
+changed_col <- read.csv("metatransciptome_Networkfile/tax_Degree.csv")
+taxonomy_df <- read.csv("Fw_ lake mendota data/MAG_taxonomy.tsv", sep = "\t")
+
+colnames(changed_col) <- sub("^p__", "", colnames(changed_col))
+
+# Clean and normalize DO column
+changed_col$DO_mg_L <- ifelse(changed_col$DO_mg_L < 0, 0, changed_col$DO_mg_L)
+
+# Normalize the last 10 columns
+last_10_cols <- tail(names(changed_col), 10)
+changed_col <- changed_col %>%
+  mutate(across(all_of(last_10_cols), ~scale(., center = min(.), scale = max(.) - min(.))[, 1]))
+
+# Run CARlasso model
+otu_res <- CARlasso(
+  Krumholzibacteriota_1 + Bacteroidota_2 + Bacteroidota_3 + Proteobacteria_4 +
+    Planctomycetota_5 + Bacteroidota_6 + Chloroflexota_7 + Bacteroidota_8 +
+    Verrucomicrobiota_9 + Actinobacteriota_10 + Planctomycetota_11 +
+    Chloroflexota_12 + Proteobacteria_13 + Firmicutes_A_14 + Verrucomicrobiota_15 ~
+    depth + wtemp_in_celsius + specific_conductivity + chlorophyll_RFU +
+    phycocyanin_RFU + Dissolved_organic_matter_RFU + Turbidity_RFU + DO_mg_L + PH,
+  data = changed_col,
+  adaptive = TRUE, link = "log", n_iter = 5000, n_burn_in = 1000, thin_by = 10
+)
+
+# Apply horseshoe shrinkage
+otu_res <- horseshoe(otu_res)
+
+# Genomes of interest
+genomes_list <- c(
+  "Ga0485158_metabat2_ours.098", "Ga0485159_metabat2_ours.079", "Ga0485171_metabat2_ours.127_sub",
+  "Ga0485171_metabat2_ours.004", "Ga0485170_maxbin.090", "Ga0485171_metabat1.063",
+  "Ga0485157_metabat2_ours.019", "Ga0485166_metabat2_ours.038", "Ga0485167_metabat2_ours.023",
+  "Ga0485170_maxbin.059_sub", "Ga0485171_maxbin.130_sub", "Ga0485160_metabat2_ours.158_sub",
+  "Ga0485161_maxbin.110", "Ga0485161_metabat1.096", "Ga0485161_metabat2_ours.167_sub"
+)
+
+# Create taxonomy mappings
+genome_to_domain_map <- setNames(taxonomy_df$Domain, taxonomy_df$Genome)
+genome_to_phylum_map <- setNames(taxonomy_df$Phylum, taxonomy_df$Genome)
+genome_to_class_map <- setNames(taxonomy_df$Class, taxonomy_df$Genome)
+genome_to_order_map <- setNames(taxonomy_df$Order, taxonomy_df$Genome)
+genome_to_family_map <- setNames(taxonomy_df$Family, taxonomy_df$Genome)
+genome_to_genus_map <- setNames(taxonomy_df$Genus, taxonomy_df$Genome)
+genome_to_species_map <- setNames(taxonomy_df$Species, taxonomy_df$Genome)
+
+# Extract taxonomy names
+domain_names <- sapply(genomes_list, function(genome) genome_to_domain_map[[genome]])
+phylum_names <- sapply(genomes_list, function(genome) genome_to_phylum_map[[genome]])
+class_names <- sapply(genomes_list, function(genome) genome_to_class_map[[genome]])
+order_names <- sapply(genomes_list, function(genome) genome_to_order_map[[genome]])
+family_names <- sapply(genomes_list, function(genome) genome_to_family_map[[genome]])
+genus_names <- sapply(genomes_list, function(genome) genome_to_genus_map[[genome]])
+species_names <- sapply(genomes_list, function(genome) genome_to_species_map[[genome]])
+
+# Clean up phylum names (remove "p__" if needed)
+phylum_names <- sub("^p__", "", phylum_names)
+
+# Create readable node names
+new_column_names <- paste(phylum_names, seq_along(genomes_list), sep = "_")
+
+# Create output directory if it doesn't exist
+if (!dir.exists("OutputFigures")) {
+  dir.create("OutputFigures")
+}
+
+# Save plot as PNG
+png(filename = "OutputFigures/Metatranscriptome_supp.png",
+    width = 10, height = 8, units = "in", res = 300)
+
+plot(otu_res)
+
+dev.off()
+
+
+
