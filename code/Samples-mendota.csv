@@ -1,0 +1,17 @@
+Sample.Name,Date.YYYY-MM-DD,Month,Depth,Metagenome,Virome,Metatranscriptome,Oxygen,Mixing regime,Lake,Latitude,Longitude
+2020-07-24_5m,7/24/20,July,5,yes,yes,yes,oxic,stratified,Lake Mendota,43.099444,-89.404444
+2020-07-24_15m,7/24/20,July,15,yes,yes,yes,anoxic,stratified,Lake Mendota,43.099444,-89.404444
+2020-07-24_23.5m,7/24/20,July,23.5,yes,yes,yes,anoxic,stratified,Lake Mendota,43.099444,-89.404444
+2020-08-05_10m,8/5/20,August,10,yes,no,yes,oxycline,stratified,Lake Mendota,43.099444,-89.404444
+2020-08-05_15m,8/5/20,August,15,yes,yes,yes,anoxic,stratified,Lake Mendota,43.099444,-89.404444
+2020-08-05_23.5m,8/5/20,August,23.5,yes,yes,yes,anoxic,stratified,Lake Mendota,43.099444,-89.404444
+2020-08-25_10m,8/25/20,August,10,yes,no,yes,oxycline,stratified,Lake Mendota,43.099444,-89.404444
+2020-08-25_15m,8/25/20,August,15,yes,yes,yes,anoxic,stratified,Lake Mendota,43.099444,-89.404444
+2020-08-25_23.5m,8/25/20,August,23.5,yes,yes,yes,anoxic,stratified,Lake Mendota,43.099444,-89.404444
+2020-09-11_15m,9/11/20,September,15,yes,yes,yes,anoxic,stratified,Lake Mendota,43.099444,-89.404444
+2020-09-11_23.5m,9/11/20,September,23.5,yes,yes,yes,anoxic,stratified,Lake Mendota,43.099444,-89.404444
+2020-10-08_15m,10/8/20,October,15,yes,yes,yes,oxycline,stratified,Lake Mendota,43.099444,-89.404444
+2020-10-08_23.5m,10/8/20,October,23.5,yes,yes,yes,anoxic,stratified,Lake Mendota,43.099444,-89.404444
+2020-10-19_5m,10/19/20,October,5,yes,yes,yes,oxic,mixed,Lake Mendota,43.099444,-89.404444
+2020-10-19_15m,10/19/20,October,15,yes,yes,yes,oxic,mixed,Lake Mendota,43.099444,-89.404444
+2020-10-19_23.5m,10/19/20,October,23.5,yes,yes,yes,oxic,mixed,Lake Mendota,43.099444,-89.404444
