@@ -11,7 +11,6 @@ samples <- read_csv("Samples-mendota.csv")
 abundance_t <- abundance %>%
   pivot_longer(-Genome, names_to = "Sample.Name", values_to = "Count") %>%
   pivot_wider(names_from = Genome, values_from = Count)
-
 # Merge with sample metadata
 merged_df <- left_join(samples, abundance_t, by = "Sample.Name")
 
