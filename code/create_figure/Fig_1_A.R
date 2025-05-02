@@ -92,4 +92,5 @@ grid.arrange(
   ncol = 2,
   widths = c(4.5, 2)  # Adjust for spacing between bar and heatmap
 )
+
 dev.off()
