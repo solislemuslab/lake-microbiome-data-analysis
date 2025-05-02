@@ -12,10 +12,8 @@ Our data is available on Zenodo: [10.5281/zenodo.14046929](https://doi.org/10.52
 | **SE_features.R**    | Generates files using SpiecEasi Algorithm for the feature selection of the MAGs. |
 | **Metagenomic_Networkfile.py**       | Generates a directory containing files using the SPIEC-EASI algorithm as well as fraction method for metagenomic data analysis. Serves as input for `Metagenomic_Network.Rmd`. |
 | **Metatransciptome_Networkfile.py**  | Similar function for metatranscriptomic data, generating input files for `Metatransciptomic_Network.Rmd`.             |
-| **lake-microbiome-figures.py**       | Analyzes microbial abundance in varied environmental conditions and generates visualizations.                         |
 | **Metagenomic_Network.Rmd**          | R Markdown file that explores connections between MAGs and environmental parameters that includes seven different feature selection methods, four permutation tests, and three percentage analyses. Outputs CarLasso models.         |
 | **Metatransciptomic_Network.Rmd**    | Complements the Metagenomic analysis by focusing on metatranscriptomic data to produce comparative CarLasso models.  |
-| **Car-figures.R**                    | Uses the CARlasso model to identify and visualize connections between MAGs and environmental parameters.               |
 
 
 ## Prerequisites
@@ -46,9 +44,6 @@ python3 Metatransciptome_Networkfile.py
 # Run R Markdown analyses
 Rscript -e "rmarkdown::render('Metagenomic_Network.Rmd')"
 Rscript -e "rmarkdown::render('Metatransciptomic_Network.Rmd')"
-
-# Generate figures
-Rscript Car-figures.R
 
 ```
 For running these code, automatically create the following folder as input of algorithms.
