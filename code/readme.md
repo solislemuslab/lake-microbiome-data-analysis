@@ -48,7 +48,6 @@ Rscript -e "rmarkdown::render('Metagenomic_Network.Rmd')"
 Rscript -e "rmarkdown::render('Metatransciptomic_Network.Rmd')"
 
 # Generate figures
-python3 lake-microbiome-figures.py
 Rscript Car-figures.R
 
 ```
