@@ -5,7 +5,6 @@ library(ggplot2)
 library(dplyr)
 library(stringr)
 library(readr)
-
 # Load abundance data
 df <- read.csv("coverm_431_MAGS_metagenomes_reads_count.csv", row.names = 1, check.names = FALSE)
 df_t <- as.data.frame(t(df))  # Transpose: samples as rows
