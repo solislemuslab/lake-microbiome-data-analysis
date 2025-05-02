@@ -6,7 +6,6 @@ library(ggpubr)
 # Load data
 abundance <- read_csv("coverm_431_MAGS_metagenomes_reads_count.csv")
 samples <- read_csv("Samples-mendota.csv")
-
 # Transpose abundance: rows = samples
 abundance_t <- abundance %>%
   pivot_longer(-Genome, names_to = "Sample.Name", values_to = "Count") %>%
