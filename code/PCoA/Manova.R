@@ -8,7 +8,6 @@ set.seed(1234)
 # Load abundance and metadata
 abundance <- read_csv("coverm_431_MAGS_metagenomes_reads_count.csv")
 metadata <- read_csv("Samples-mendota.csv")
-
 # Transpose abundance data
 abundance_t <- abundance %>%
   pivot_longer(-Genome, names_to = "Sample", values_to = "Count") %>%
