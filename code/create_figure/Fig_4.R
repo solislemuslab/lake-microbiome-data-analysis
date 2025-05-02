@@ -5,7 +5,6 @@ library(readr)
 library(ggplot2)
 library(ggalluvial)
 library(stringr)
-
 # === Load data ===
 abundance_data <- read_csv("coverm_431_MAGS_metagenomes_reads_count.csv", show_col_types = FALSE)
 # Convert to relative abundance (row-wise TSS)
