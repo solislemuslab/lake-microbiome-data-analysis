@@ -20,7 +20,6 @@ mag_cols <- setdiff(colnames(merged_df), colnames(samples))
 
 # Normalize abundance (TSS)
 merged_df[mag_cols] <- merged_df[mag_cols] / rowSums(merged_df[mag_cols])
-
 # Pivot to long format
 long_df <- merged_df %>%
   pivot_longer(cols = all_of(mag_cols), names_to = "MAG", values_to = "Relative_Abundance")
