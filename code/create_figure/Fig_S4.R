@@ -1,7 +1,6 @@
 # Load necessary libraries
 library(tidyverse)
 library(ggpubr)
-
 # Load data
 abundance <- read_csv("coverm_431_MAGS_metagenomes_reads_count.csv")
 samples <- read_csv("Samples-mendota.csv")
